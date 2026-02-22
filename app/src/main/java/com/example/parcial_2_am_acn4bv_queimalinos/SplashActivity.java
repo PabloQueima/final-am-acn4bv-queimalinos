@@ -12,21 +12,24 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        if (auth.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uid = auth.getCurrentUser().getUid();
 
         FirebaseFirestore.getInstance()
                 .collection("usuarios")
                 .document(uid)
                 .get()
                 .addOnSuccessListener(doc -> {
+
                     if (!doc.exists()) {
-                        FirebaseAuth.getInstance().signOut();
+                        auth.signOut();
                         startActivity(new Intent(this, LoginActivity.class));
                         finish();
                         return;
@@ -36,14 +39,19 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intent;
 
                     if ("admin".equals(rol)) {
-                        intent = new Intent(this, AdminMainActivity.class);
+                        intent = new Intent(this, AdminActivity.class);
                     } else if ("entrenador".equals(rol)) {
-                        intent = new Intent(this, EntrenadorMainActivity.class);
+                        intent = new Intent(this, EntrenadorActivity.class);
                     } else {
-                        intent = new Intent(this, MainActivity.class);
+                        intent = new Intent(this, ClienteActivity.class);
                     }
 
                     startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    auth.signOut();
+                    startActivity(new Intent(this, LoginActivity.class));
                     finish();
                 });
     }

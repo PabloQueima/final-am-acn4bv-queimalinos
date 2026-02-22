@@ -32,15 +32,15 @@
             android:exported="false"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ClienteActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".EntrenadorMainActivity"
+            android:name=".EntrenadorActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".AdminMainActivity"
+            android:name=".AdminActivity"
             android:exported="false"/>
 
         <activity

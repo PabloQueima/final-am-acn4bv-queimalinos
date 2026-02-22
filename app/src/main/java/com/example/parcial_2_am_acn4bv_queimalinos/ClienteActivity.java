@@ -1,37 +1,39 @@
 package com.example.parcial_2_am_acn4bv_queimalinos;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.SesionCompletada;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.time.Instant;
 import java.util.*;
 
-public class MainActivity extends AppCompatActivity {
+public class ClienteActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
     private LinearLayout contenedorSesiones;
-    private SharedPreferences prefs;
 
     private final Map<String, Integer> totalEjPorSesion = new HashMap<>();
     private final Map<String, TextView> progresoPorSesion = new HashMap<>();
     private final Set<String> completados = new HashSet<>();
 
+    private long inicioSesionMillis;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         auth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        prefs = getSharedPreferences("progreso", MODE_PRIVATE);
 
         if (auth.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -39,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        setContentView(R.layout.activity_cliente);
+
+        db = FirebaseFirestore.getInstance();
         contenedorSesiones = findViewById(R.id.contenedorSesiones);
 
         Button logoutBtn = findViewById(R.id.logoutBtn);
         logoutBtn.setOnClickListener(v -> {
             auth.signOut();
-            prefs.edit().clear().apply();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
@@ -55,30 +59,14 @@ public class MainActivity extends AppCompatActivity {
                 .document(uid)
                 .get()
                 .addOnSuccessListener(doc -> {
-
-                    if (!doc.exists()) {
-                        Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
                     String nombre = doc.getString("nombre");
-                    String rol = doc.getString("rol");
-
                     TextView bienvenida = findViewById(R.id.txtBienvenida);
                     bienvenida.setText("Bienvenido " + nombre);
-
-                    if (!"cliente".equals(rol)) {
-                        Toast.makeText(this,
-                                "Esta app es solo para clientes",
-                                Toast.LENGTH_LONG).show();
-                        auth.signOut();
-                        startActivity(new Intent(this, LoginActivity.class));
-                        finish();
-                        return;
-                    }
-
                     cargarSesiones(uid);
-                });
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error cargando usuario", Toast.LENGTH_SHORT).show()
+                );
     }
 
     private void cargarSesiones(String uid) {
@@ -87,27 +75,25 @@ public class MainActivity extends AppCompatActivity {
                 .whereEqualTo("clienteUid", uid)
                 .get()
                 .addOnSuccessListener(sesiones -> {
-
-                    if (sesiones.isEmpty()) {
-                        Toast.makeText(this,
-                                "No tenés sesiones asignadas",
-                                Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
                     for (DocumentSnapshot s : sesiones) {
                         crearSesion(s);
                     }
                 });
     }
 
-    private void crearSesion(DocumentSnapshot sesion) {
+    private void crearSesion(DocumentSnapshot sesionDoc) {
 
-        String titulo = sesion.getString("titulo");
+        inicioSesionMillis = System.currentTimeMillis();
+
+        String sesionId = sesionDoc.getId();
+        String titulo = sesionDoc.getString("titulo");
+
         List<Map<String, Object>> ejercicios =
-                (List<Map<String, Object>>) sesion.get("ejercicios");
+                (List<Map<String, Object>>) sesionDoc.get("ejercicios");
 
         if (ejercicios == null) ejercicios = new ArrayList<>();
+
+        final List<Map<String, Object>> ejerciciosFinal = ejercicios;
 
         LinearLayout sesionLayout = new LinearLayout(this);
         sesionLayout.setOrientation(LinearLayout.VERTICAL);
@@ -121,23 +107,21 @@ public class MainActivity extends AppCompatActivity {
         sesionLayout.addView(tituloView);
 
         TextView progreso = new TextView(this);
-        progreso.setText("0 de " + ejercicios.size() + " ejercicios completados");
+        progreso.setText("0 de " + ejerciciosFinal.size() + " ejercicios completados");
         sesionLayout.addView(progreso);
 
-        progresoPorSesion.put(titulo, progreso);
-        totalEjPorSesion.put(titulo, ejercicios.size());
+        progresoPorSesion.put(sesionId, progreso);
+        totalEjPorSesion.put(sesionId, ejerciciosFinal.size());
 
         LinearLayout lista = new LinearLayout(this);
         lista.setOrientation(LinearLayout.VERTICAL);
         lista.setVisibility(View.GONE);
 
-        for (Map<String, Object> e : ejercicios) {
-
+        for (Map<String, Object> e : ejerciciosFinal) {
             int id = ((Number) e.get("id")).intValue();
             int series = ((Number) e.get("series")).intValue();
             int reps = ((Number) e.get("reps")).intValue();
-
-            crearEjercicio(titulo, id, series, reps, lista);
+            crearEjercicio(sesionId, id, series, reps, lista);
         }
 
         Button toggleBtn = new Button(this);
@@ -150,7 +134,9 @@ public class MainActivity extends AppCompatActivity {
 
         Button terminarBtn = new Button(this);
         terminarBtn.setText("Terminar sesión");
-        terminarBtn.setOnClickListener(v -> finalizarSesion(titulo));
+        terminarBtn.setOnClickListener(v ->
+                finalizarSesion(sesionId, titulo, ejerciciosFinal)
+        );
 
         sesionLayout.addView(toggleBtn);
         sesionLayout.addView(lista);
@@ -159,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         contenedorSesiones.addView(sesionLayout);
     }
 
-    private void crearEjercicio(String sesionTitulo,
+    private void crearEjercicio(String sesionId,
                                 int ejercicioId,
                                 int series,
                                 int reps,
@@ -177,11 +163,9 @@ public class MainActivity extends AppCompatActivity {
 
                     String nombre = e.getString("nombre");
                     String descripcion = e.getString("descripcion");
-                    String imageUrl = e.getString("imageUrl");
 
                     LinearLayout card = new LinearLayout(this);
                     card.setOrientation(LinearLayout.VERTICAL);
-                    card.setPadding(16, 16, 16, 16);
 
                     TextView nombreView = new TextView(this);
                     nombreView.setText(nombre);
@@ -194,55 +178,72 @@ public class MainActivity extends AppCompatActivity {
                     CheckBox check = new CheckBox(this);
                     card.addView(check);
 
-                    String key = sesionTitulo + "|" + ejercicioId;
-                    check.setChecked(prefs.getBoolean(key, false));
-
-                    if (check.isChecked()) completados.add(key);
+                    String key = sesionId + "|" + ejercicioId;
 
                     check.setOnCheckedChangeListener((b, checked) -> {
-                        prefs.edit().putBoolean(key, checked).apply();
                         if (checked) completados.add(key);
                         else completados.remove(key);
-                        actualizarProgreso(sesionTitulo);
-                    });
-
-                    card.setOnClickListener(v -> {
-                        Intent i = new Intent(this, DetalleEjercicioActivity.class);
-                        i.putExtra("nombre", nombre);
-                        i.putExtra("descripcion", descripcion);
-                        i.putExtra("series", series);
-                        i.putExtra("repeticiones", reps);
-                        i.putExtra("imageUrl", imageUrl);
-                        startActivity(i);
+                        actualizarProgreso(sesionId);
                     });
 
                     lista.addView(card);
                 });
     }
 
-    private void actualizarProgreso(String sesionTitulo) {
+    private void actualizarProgreso(String sesionId) {
 
-        int total = totalEjPorSesion.get(sesionTitulo);
+        int total = totalEjPorSesion.get(sesionId);
+        int hechos = 0;
 
-        long hechos = completados.stream()
-                .filter(k -> k.startsWith(sesionTitulo + "|"))
-                .count();
+        for (String k : completados) {
+            if (k.startsWith(sesionId + "|")) {
+                hechos++;
+            }
+        }
 
-        progresoPorSesion.get(sesionTitulo)
+        progresoPorSesion.get(sesionId)
                 .setText(hechos + " de " + total + " ejercicios completados");
-
-        if (hechos == total) finalizarSesion(sesionTitulo);
     }
 
-    private void finalizarSesion(String sesionTitulo) {
+    private void finalizarSesion(String sesionId,
+                                 String titulo,
+                                 List<Map<String, Object>> ejercicios) {
 
-        new AlertDialog.Builder(this)
-                .setTitle("SESIÓN TERMINADA")
-                .setPositiveButton("OK", (d, w) -> {
-                    prefs.edit().clear().apply();
-                    completados.clear();
-                    recreate();
+        String uid = auth.getCurrentUser().getUid();
+
+        long finMillis = System.currentTimeMillis();
+        long duracionSegundos = (finMillis - inicioSesionMillis) / 1000;
+
+        List<Sesion.EjercicioRef> snapshot = new ArrayList<>();
+
+        for (Map<String, Object> e : ejercicios) {
+            Sesion.EjercicioRef ref = new Sesion.EjercicioRef();
+            ref.setId(((Number) e.get("id")).intValue());
+            ref.setSeries(((Number) e.get("series")).intValue());
+            ref.setReps(((Number) e.get("reps")).intValue());
+            snapshot.add(ref);
+        }
+
+        SesionCompletada completada = new SesionCompletada();
+        completada.setClienteUid(uid);
+        completada.setSesionId(sesionId);
+        completada.setTituloSesion(titulo);
+        completada.setEjerciciosSnapshot(snapshot);
+        completada.setFechaInicio(Instant.ofEpochMilli(inicioSesionMillis).toString());
+        completada.setFechaFin(Instant.ofEpochMilli(finMillis).toString());
+        completada.setDuracionSegundos(duracionSegundos);
+        completada.setCreatedAt(Instant.now().toString());
+
+        db.collection("sesionesCompletadas")
+                .add(completada)
+                .addOnSuccessListener(r -> {
+                    new AlertDialog.Builder(this)
+                            .setTitle("SESIÓN TERMINADA")
+                            .setPositiveButton("OK", (d, w) -> recreate())
+                            .show();
                 })
-                .show();
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error guardando sesión", Toast.LENGTH_SHORT).show()
+                );
     }
 }

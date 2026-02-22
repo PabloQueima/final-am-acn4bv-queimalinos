@@ -35,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void register() {
+
         String nombre = nombreInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String pass = passInput.getText().toString().trim();
@@ -44,8 +45,14 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (pass.length() < 6) {
+            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         auth.createUserWithEmailAndPassword(email, pass)
                 .addOnSuccessListener(result -> {
+
                     String uid = result.getUser().getUid();
 
                     Map<String, Object> datos = new HashMap<>();
@@ -58,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
                             .document(uid)
                             .set(datos)
                             .addOnSuccessListener(v -> {
-                                startActivity(new Intent(this, MainActivity.class));
+                                startActivity(new Intent(this, SplashActivity.class));
                                 finish();
                             })
                             .addOnFailureListener(e ->
