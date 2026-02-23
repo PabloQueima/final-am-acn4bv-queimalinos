@@ -13,7 +13,6 @@ public class Sesion {
     private String updatedAt;
 
     public Sesion() {
-        // Constructor vacío obligatorio para Firestore
     }
 
     public String getId() {
@@ -72,7 +71,6 @@ public class Sesion {
         this.updatedAt = updatedAt;
     }
 
-    // Clase interna para los ejercicios dentro de la sesión
     public static class EjercicioRef {
 
         private int id;

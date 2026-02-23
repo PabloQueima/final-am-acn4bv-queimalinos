@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_primary">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
 
     <ImageView
-        android:id="@+id/logoView"
-        android:layout_width="@dimen/logo_splash"
-        android:layout_height="@dimen/logo_splash"
-        android:src="@drawable/logo"
-        android:contentDescription="Logo"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginBottom="16dp" />
 
     <TextView
-        android:id="@+id/txtTituloSplash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/texto_plataforma"
-        android:textColor="@color/color_light"
-        android:textSize="@dimen/texto_subtitulo"
+        android:text="Training App"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_below="@id/logoView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        android:layout_marginBottom="32dp" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:visibility="gone"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:visibility="gone" />
+
+</LinearLayout>
