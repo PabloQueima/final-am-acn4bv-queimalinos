@@ -1,129 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/fondo"
-    android:padding="@dimen/padding_general"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- ===== USUARIOS ===== -->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gestión de Usuarios"
-            android:textStyle="bold"
-            android:textSize="@dimen/texto_subtitulo"
-            android:layout_marginBottom="16dp" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:background="@color/color_light"
-            android:padding="16dp"
-            android:layout_marginBottom="24dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/inputNombreUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nombre"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/inputEmailUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="8dp"/>
-
-            <Spinner
-                android:id="@+id/spinnerRol"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"/>
-
-            <Button
-                android:id="@+id/btnGuardarUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Guardar Usuario"/>
-
-            <LinearLayout
-                android:id="@+id/contenedorUsuarios"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"/>
-        </LinearLayout>
-
-        <!-- ===== EJERCICIOS ===== -->
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gestión de Ejercicios"
+            android:text="Dashboard Admin"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:textSize="@dimen/texto_subtitulo"
             android:layout_marginBottom="16dp" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:background="@color/color_light"
-            android:padding="16dp"
-            android:layout_marginBottom="24dp"
+        <!-- Métricas -->
+        <TextView android:id="@+id/tvTotalUsuarios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/tvTotalClientes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/tvTotalEntrenadores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/tvTotalEjercicios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/tvTotalSesiones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/tvTotalSesionesCompletadas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/tvPromedioSesionesPorCliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Navegación -->
+        <Button
+            android:id="@+id/btnGestionUsuarios"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/inputNombreEjercicio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nombre ejercicio"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/inputDescripcionEjercicio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Descripción"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/inputImagenEjercicio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="URL imagen"
-                android:layout_marginBottom="12dp"/>
-
-            <Button
-                android:id="@+id/btnGuardarEjercicio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Guardar Ejercicio"/>
-
-            <LinearLayout
-                android:id="@+id/contenedorEjercicios"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:text="Gestionar Usuarios"
+            android:layout_marginBottom="12dp"/>
 
         <Button
-            android:id="@+id/logoutBtn"
+            android:id="@+id/btnGestionEjercicios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_logout"
-            android:backgroundTint="@color/color_accent"
-            android:textColor="@color/color_light"/>
-    </LinearLayout>
+            android:text="Gestionar Ejercicios"
+            android:layout_marginBottom="12dp"/>
 
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar sesión"/>
+
+    </LinearLayout>
 </ScrollView>
