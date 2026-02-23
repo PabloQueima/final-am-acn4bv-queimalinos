@@ -2,8 +2,11 @@ package com.example.parcial_2_am_acn4bv_queimalinos;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SplashActivity extends AppCompatActivity {
@@ -13,17 +16,19 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
 
-        if (auth.getCurrentUser() == null) {
+        if (user == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        String uid = auth.getCurrentUser().getUid();
+        final String uid = user.getUid();
 
-        FirebaseFirestore.getInstance()
-                .collection("usuarios")
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("usuarios")
                 .document(uid)
                 .get()
                 .addOnSuccessListener(doc -> {
@@ -42,8 +47,13 @@ public class SplashActivity extends AppCompatActivity {
                         intent = new Intent(this, AdminActivity.class);
                     } else if ("entrenador".equals(rol)) {
                         intent = new Intent(this, EntrenadorActivity.class);
-                    } else {
+                    } else if ("cliente".equals(rol)) {
                         intent = new Intent(this, ClienteActivity.class);
+                    } else {
+                        auth.signOut();
+                        startActivity(new Intent(this, LoginActivity.class));
+                        finish();
+                        return;
                     }
 
                     startActivity(intent);
