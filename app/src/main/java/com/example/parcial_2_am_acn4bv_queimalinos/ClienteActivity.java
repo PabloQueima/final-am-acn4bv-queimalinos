@@ -2,71 +2,84 @@ package com.example.parcial_2_am_acn4bv_queimalinos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.*;
+
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.SesionCompletada;
 
 import java.util.List;
 
 public class ClienteActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db;
     private FirebaseAuth auth;
+    private FirebaseFirestore db;
+
     private LinearLayout contenedorSesiones;
+    private TextView txtSesionesCompletadas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente);
 
-        db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         contenedorSesiones = findViewById(R.id.contenedorSesiones);
-        Button logoutBtn = findViewById(R.id.logoutBtn);
+        txtSesionesCompletadas = findViewById(R.id.txtBienvenida);
 
+        Button logoutBtn = findViewById(R.id.logoutBtn);
         logoutBtn.setOnClickListener(v -> {
             auth.signOut();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
 
-        cargarSesiones();
+        cargarSesionesDisponibles();
+        cargarSesionesCompletadas();
     }
 
-    private void cargarSesiones() {
-
+    private void cargarSesionesDisponibles() {
         contenedorSesiones.removeAllViews();
 
+        String clienteUid = auth.getCurrentUser().getUid();
+
         db.collection("sesiones")
-                .whereEqualTo("clienteUid", auth.getCurrentUser().getUid())
+                .whereEqualTo("clienteUid", clienteUid)
                 .get()
                 .addOnSuccessListener(query -> {
-
                     for (QueryDocumentSnapshot doc : query) {
+                        Sesion sesion = doc.toObject(Sesion.class);
+                        sesion.setId(doc.getId());
 
-                        String titulo = doc.getString("titulo");
-                        List<String> ejercicios = (List<String>) doc.get("ejercicios");
-
-                        TextView tv = new TextView(this);
-                        tv.setText(titulo);
-                        tv.setPadding(8, 8, 8, 8);
-
-                        tv.setOnClickListener(v -> {
-                            Intent intent = new Intent(this, DetalleEjercicioActivity.class);
-                            intent.putStringArrayListExtra(
-                                    "ejerciciosIds",
-                                    new java.util.ArrayList<>(ejercicios)
-                            );
+                        Button btnSesion = new Button(this);
+                        btnSesion.setText(sesion.getTitulo());
+                        btnSesion.setOnClickListener(v -> {
+                            Intent intent = new Intent(this, RealizarSesionActivity.class);
+                            intent.putExtra("sesionId", sesion.getId());
                             startActivity(intent);
                         });
 
-                        contenedorSesiones.addView(tv);
+                        contenedorSesiones.addView(btnSesion);
                     }
+                });
+    }
+
+    private void cargarSesionesCompletadas() {
+        String clienteUid = auth.getCurrentUser().getUid();
+
+        db.collection("sesionesCompletadas")
+                .whereEqualTo("clienteUid", clienteUid)
+                .get()
+                .addOnSuccessListener(query -> {
+                    int count = query.size();
+                    txtSesionesCompletadas.setText("Sesiones completadas: " + count);
                 });
     }
 }

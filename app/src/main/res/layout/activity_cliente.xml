@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo"
     android:padding="@dimen/padding_general"
-    android:fillViewport="true">
+    android:background="@drawable/fondo">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/txtBienvenida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido"
+        android:textSize="@dimen/texto_subtitulo"
+        android:textColor="@color/color_dark2"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/txtSesionesCompletadas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sesiones completadas: 0"
+        android:textSize="@dimen/texto_general"
+        android:textColor="@color/color_dark2"
+        android:layout_marginBottom="16dp"/>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/txtBienvenida"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/texto_bienvenida"
-            android:textSize="@dimen/texto_subtitulo"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/contenedorSesiones"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"/>
+            android:layout_height="wrap_content">
+        </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/logoutBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_logout"
-            android:backgroundTint="@color/color_accent"
-            android:textColor="@color/color_light"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cerrar sesión"
+        android:textColor="@color/color_light"
+        android:backgroundTint="@color/color_accent"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"/>
 
-</ScrollView>
+</LinearLayout>
