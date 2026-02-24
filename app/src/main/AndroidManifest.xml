@@ -41,6 +41,10 @@
             android:exported="false"/>
 
         <activity
+            android:name=".RealizarSesionActivity"
+            android:exported="false"/>
+
+        <activity
             android:name=".DetalleEjercicioActivity"
             android:exported="false"/>
 

@@ -47,8 +47,8 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passInput.getText().toString().trim();
 
         if (TextUtils.isEmpty(nombre) ||
-            TextUtils.isEmpty(email) ||
-            TextUtils.isEmpty(password)) {
+                TextUtils.isEmpty(email) ||
+                TextUtils.isEmpty(password)) {
 
             Toast.makeText(this, "Completar todos los campos", Toast.LENGTH_SHORT).show();
             return;
@@ -73,26 +73,27 @@ public class RegisterActivity extends AppCompatActivity {
                     Map<String, Object> usuario = new HashMap<>();
                     usuario.put("nombre", nombre);
                     usuario.put("email", email);
-                    usuario.put("rol", "cliente"); // FIJO
+                    usuario.put("rol", "cliente");
 
                     db.collection("usuarios")
                             .document(uid)
                             .set(usuario)
                             .addOnSuccessListener(aVoid -> {
+
                                 Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show();
 
-                                // Volver a login (Splash decidirá luego)
-                                auth.signOut();
-                                startActivity(new Intent(this, LoginActivity.class));
+                                Intent intent = new Intent(this, ClienteActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                                 finish();
                             })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_SHORT).show();
-                            });
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_SHORT).show()
+                            );
 
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 }

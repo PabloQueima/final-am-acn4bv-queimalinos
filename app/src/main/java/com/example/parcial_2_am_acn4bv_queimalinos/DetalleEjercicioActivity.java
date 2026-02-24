@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.*;
 import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
 import com.squareup.picasso.Picasso;
 
@@ -13,10 +13,14 @@ public class DetalleEjercicioActivity extends AppCompatActivity {
     private TextView txtNombre, txtDescripcion, txtElemento, txtParteCuerpo;
     private ImageView imgEjercicio;
 
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_ejercicio);
+
+        db = FirebaseFirestore.getInstance();
 
         txtNombre = findViewById(R.id.txtTituloEjercicio);
         txtDescripcion = findViewById(R.id.txtDescripcionEjercicio);
@@ -26,20 +30,53 @@ public class DetalleEjercicioActivity extends AppCompatActivity {
 
         int ejercicioId = getIntent().getIntExtra("ejercicioId", -1);
 
-        FirebaseFirestore.getInstance()
-                .collection("ejercicios")
+        if (ejercicioId == -1) {
+            Toast.makeText(this, "Ejercicio inválido", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        cargarEjercicio(ejercicioId);
+    }
+
+    private void cargarEjercicio(int ejercicioId) {
+
+        db.collection("ejercicios")
                 .whereEqualTo("id", ejercicioId)
+                .limit(1)
                 .get()
                 .addOnSuccessListener(query -> {
-                    for (var doc : query) {
-                        Ejercicio ej = doc.toObject(Ejercicio.class);
-                        txtNombre.setText(ej.getNombre());
-                        txtDescripcion.setText(ej.getDescripcion());
-                        txtElemento.setText("Elemento: " + ej.getElemento());
-                        txtParteCuerpo.setText("Parte del cuerpo: " + ej.getParteCuerpo());
-                        Picasso.get().load(ej.getImageUrl()).into(imgEjercicio);
-                        break;
+
+                    if (query.isEmpty()) {
+                        Toast.makeText(this, "Ejercicio no encontrado", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
                     }
-                });
+
+                    DocumentSnapshot doc = query.getDocuments().get(0);
+                    Ejercicio ej = doc.toObject(Ejercicio.class);
+
+                    if (ej == null) {
+                        Toast.makeText(this, "Error al cargar ejercicio", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
+
+                    txtNombre.setText(ej.getNombre());
+                    txtDescripcion.setText(ej.getDescripcion());
+                    txtElemento.setText("Elemento: " + ej.getElemento());
+                    txtParteCuerpo.setText("Parte del cuerpo: " + ej.getParteCuerpo());
+
+                    if (ej.getImageUrl() != null && !ej.getImageUrl().isEmpty()) {
+                        Picasso.get()
+                                .load(ej.getImageUrl())
+                                .placeholder(R.drawable.ic_launcher_background)
+                                .error(R.drawable.ic_launcher_background)
+                                .into(imgEjercicio);
+                    }
+                })
+                .addOnFailureListener(e -> 
+                        Toast.makeText(this, "Error de conexión", Toast.LENGTH_SHORT).show()
+                );
     }
 }

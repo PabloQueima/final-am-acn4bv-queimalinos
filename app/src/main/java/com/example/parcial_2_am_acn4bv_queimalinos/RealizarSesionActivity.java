@@ -1,16 +1,16 @@
 package com.example.parcial_2_am_acn4bv_queimalinos;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.view.View;
+import android.os.Handler;
 import android.widget.*;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
+
 import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
 import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
 import com.example.parcial_2_am_acn4bv_queimalinos.models.SesionCompletada;
@@ -29,10 +29,14 @@ public class RealizarSesionActivity extends AppCompatActivity {
 
     private String sesionId;
     private Sesion sesion;
+
     private Map<Integer, CheckBox> ejerciciosCheckMap = new HashMap<>();
 
     private long startTimeMillis;
-    private CountDownTimer timer;
+    private Handler handler = new Handler();
+    private Runnable timerRunnable;
+
+    private String fechaInicioISO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +54,11 @@ public class RealizarSesionActivity extends AppCompatActivity {
 
         sesionId = getIntent().getStringExtra("sesionId");
 
-        cargarSesion();
-
+        fechaInicioISO = isoNow();
         startTimeMillis = System.currentTimeMillis();
+
         iniciarTimer();
+        cargarSesion();
 
         btnFinalizar.setOnClickListener(v -> finalizarSesion());
         btnCancelar.setOnClickListener(v -> confirmarCancelar());
@@ -63,6 +68,7 @@ public class RealizarSesionActivity extends AppCompatActivity {
         db.collection("sesiones").document(sesionId)
                 .get()
                 .addOnSuccessListener(doc -> {
+
                     if (!doc.exists()) {
                         Toast.makeText(this, "Sesión no encontrada", Toast.LENGTH_SHORT).show();
                         finish();
@@ -75,57 +81,68 @@ public class RealizarSesionActivity extends AppCompatActivity {
                     txtTituloSesion.setText(sesion.getTitulo());
 
                     for (Sesion.EjercicioRef eRef : sesion.getEjercicios()) {
+
                         db.collection("ejercicios")
                                 .whereEqualTo("id", eRef.getId())
+                                .limit(1)
                                 .get()
                                 .addOnSuccessListener(query -> {
-                                    for (DocumentSnapshot d : query) {
-                                        Ejercicio ej = d.toObject(Ejercicio.class);
-                                        if (ej == null) continue;
 
-                                        LinearLayout row = new LinearLayout(this);
-                                        row.setOrientation(LinearLayout.HORIZONTAL);
-                                        row.setPadding(8, 8, 8, 8);
+                                    if (query.isEmpty()) return;
 
-                                        CheckBox cb = new CheckBox(this);
-                                        cb.setText(ej.getNombre() + " (" + eRef.getSeries() + "x" + eRef.getReps() + ")");
-                                        cb.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+                                    DocumentSnapshot d = query.getDocuments().get(0);
+                                    Ejercicio ej = d.toObject(Ejercicio.class);
+                                    if (ej == null) return;
 
-                                        Button detalleBtn = new Button(this);
-                                        detalleBtn.setText("Detalle");
-                                        detalleBtn.setOnClickListener(v -> {
-                                            Intent intent = new Intent(this, DetalleEjercicioActivity.class);
-                                            intent.putExtra("ejercicioId", ej.getId());
-                                            startActivity(intent);
-                                        });
+                                    LinearLayout row = new LinearLayout(this);
+                                    row.setOrientation(LinearLayout.HORIZONTAL);
+                                    row.setPadding(8, 8, 8, 8);
 
-                                        row.addView(cb);
-                                        row.addView(detalleBtn);
+                                    CheckBox cb = new CheckBox(this);
+                                    cb.setText(ej.getNombre() + " (" + eRef.getSeries() + "x" + eRef.getReps() + ")");
+                                    cb.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
-                                        contenedorEjercicios.addView(row);
-                                        ejerciciosCheckMap.put(eRef.getId(), cb);
-                                    }
+                                    Button detalleBtn = new Button(this);
+                                    detalleBtn.setText("Detalle");
+                                    detalleBtn.setOnClickListener(v -> {
+                                        Intent intent = new Intent(this, DetalleEjercicioActivity.class);
+                                        intent.putExtra("ejercicioId", ej.getId());
+                                        startActivity(intent);
+                                    });
+
+                                    row.addView(cb);
+                                    row.addView(detalleBtn);
+
+                                    contenedorEjercicios.addView(row);
+                                    ejerciciosCheckMap.put(eRef.getId(), cb);
                                 });
                     }
                 });
     }
 
     private void iniciarTimer() {
-        timer = new CountDownTimer(Long.MAX_VALUE, 1000) {
-            public void onTick(long millisUntilFinished) {
+
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+
                 long elapsed = (System.currentTimeMillis() - startTimeMillis) / 1000;
+
                 long h = elapsed / 3600;
                 long m = (elapsed % 3600) / 60;
                 long s = elapsed % 60;
+
                 txtTimer.setText(String.format("%02d:%02d:%02d", h, m, s));
+
+                handler.postDelayed(this, 1000);
             }
-            public void onFinish() { }
         };
-        timer.start();
+
+        handler.post(timerRunnable);
     }
 
     private void finalizarSesion() {
-        // Validar todos los check
+
         for (CheckBox cb : ejerciciosCheckMap.values()) {
             if (!cb.isChecked()) {
                 Toast.makeText(this, "Debe completar todos los ejercicios", Toast.LENGTH_SHORT).show();
@@ -144,13 +161,16 @@ public class RealizarSesionActivity extends AppCompatActivity {
     private void confirmarCancelar() {
         new AlertDialog.Builder(this)
                 .setTitle("Cancelar sesión")
-                .setMessage("¿Está seguro que desea cancelar la sesión? No se guardará como completada.")
+                .setMessage("No se guardará como completada. ¿Continuar?")
                 .setPositiveButton("Sí", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
     }
 
     private void guardarSesionCompletada() {
+
+        handler.removeCallbacks(timerRunnable);
+
         long durationSec = (System.currentTimeMillis() - startTimeMillis) / 1000;
 
         SesionCompletada sc = new SesionCompletada();
@@ -158,10 +178,10 @@ public class RealizarSesionActivity extends AppCompatActivity {
         sc.setSesionId(sesion.getId());
         sc.setTituloSesion(sesion.getTitulo());
         sc.setEjerciciosSnapshot(sesion.getEjercicios());
-        sc.setFechaInicio(new Date().toString());
-        sc.setFechaFin(new Date().toString());
+        sc.setFechaInicio(fechaInicioISO);
+        sc.setFechaFin(isoNow());
         sc.setDuracionSegundos(durationSec);
-        sc.setCreatedAt(new Date().toString());
+        sc.setCreatedAt(isoNow());
 
         db.collection("sesionesCompletadas")
                 .add(sc)
@@ -171,8 +191,19 @@ public class RealizarSesionActivity extends AppCompatActivity {
                 });
     }
 
+    private String isoNow() {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+                .format(new Date());
+    }
+
     @Override
     public void onBackPressed() {
         confirmarCancelar();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(timerRunnable);
     }
 }
