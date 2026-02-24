@@ -37,6 +37,10 @@
             android:exported="false"/>
 
         <activity
+            android:name=".SessionFormActivity"
+            android:exported="false"/>
+
+        <activity
             android:name=".AdminActivity"
             android:exported="false"/>
 
