@@ -37,11 +37,19 @@
             android:exported="false"/>
 
         <activity
-            android:name=".SessionFormActivity"
+            android:name=".EditarSesionActivity"
             android:exported="false"/>
 
         <activity
             android:name=".AdminActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".AdminEjerciciosActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".AdminUsuariosActivity"
             android:exported="false"/>
 
         <activity
