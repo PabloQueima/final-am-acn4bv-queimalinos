@@ -1,4 +1,4 @@
-package com.tuapp.ui.entrenador;
+package com.example.parcial_2_am_acn4bv_queimalinos.adapters;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tuapp.R;
-import com.tuapp.model.SessionExercise;
+import com.example.parcial_2_am_acn4bv_queimalinos.R;
+import com.example.parcial_2_am_acn4bv_queimalinos.model.SessionExercise;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.parcial_2_am_acn4bv_queimalinos;
+package com.example.parcial_2_am_acn4bv_queimalinos.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

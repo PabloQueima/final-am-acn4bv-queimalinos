@@ -1,4 +1,4 @@
-package com.example.parcial_2_am_acn4bv_queimalinos;
+package com.example.parcial_2_am_acn4bv_queimalinos.adapters;
 
 import android.content.Context;
 import android.content.Intent;

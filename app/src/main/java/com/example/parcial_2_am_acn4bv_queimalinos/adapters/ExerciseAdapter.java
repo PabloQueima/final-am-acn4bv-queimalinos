@@ -1,4 +1,4 @@
-package com.tuapp.ui.entrenador;
+package com.example.parcial_2_am_acn4bv_queimalinos.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tuapp.R;
-import com.tuapp.model.Exercise;
+import com.example.parcial_2_am_acn4bv_queimalinos.R;
+import com.example.parcial_2_am_acn4bv_queimalinos.model.Exercise;
 
 import java.util.List;
 
