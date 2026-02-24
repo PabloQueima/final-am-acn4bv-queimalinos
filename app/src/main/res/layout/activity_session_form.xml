@@ -1,0 +1,54 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etNombreSesion"
+        android:hint="Nombre sesión"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/etClienteUid"
+        android:hint="Cliente UID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:text="Ejercicios disponibles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etBuscarEjercicio"
+        android:hint="Buscar ejercicio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEjerciciosDisponibles"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+    <TextView
+        android:text="Ejercicios en la sesión"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEjerciciosSesion"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btnGuardarSesion"
+        android:text="Guardar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -1,72 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/fondo"
-    android:padding="@dimen/padding_general"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <EditText
+        android:id="@+id/etBuscarSesion"
+        android:hint="Buscar por nombre o clienteUid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gestión de Sesiones"
-            android:textStyle="bold"
-            android:textSize="@dimen/texto_subtitulo"
-            android:layout_marginBottom="16dp" />
+    <Button
+        android:id="@+id/btnNuevaSesion"
+        android:text="Crear nueva sesión"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:background="@color/color_light"
-            android:padding="16dp"
-            android:layout_marginBottom="24dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/inputTituloSesion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Título sesión"
-                android:layout_marginBottom="8dp"/>
-
-            <Spinner
-                android:id="@+id/spinnerClientes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"/>
-
-            <Spinner
-                android:id="@+id/spinnerEjercicios"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"/>
-
-            <Button
-                android:id="@+id/btnCrearSesion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Guardar Sesión"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/contenedorSesiones"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"/>
-
-        <Button
-            android:id="@+id/logoutBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_logout"
-            android:backgroundTint="@color/color_accent"
-            android:textColor="@color/color_light"/>
-    </LinearLayout>
-
-</ScrollView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSesiones"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>
