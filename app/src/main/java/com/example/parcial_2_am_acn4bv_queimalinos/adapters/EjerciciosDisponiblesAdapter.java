@@ -14,7 +14,8 @@ import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
 
 import java.util.List;
 
-public class EjerciciosDisponiblesAdapter extends RecyclerView.Adapter<EjerciciosDisponiblesAdapter.ViewHolder> {
+public class EjerciciosDisponiblesAdapter
+        extends RecyclerView.Adapter<EjerciciosDisponiblesAdapter.ViewHolder> {
 
     public interface OnExerciseClickListener {
         void onAdd(Ejercicio exercise);
@@ -23,7 +24,8 @@ public class EjerciciosDisponiblesAdapter extends RecyclerView.Adapter<Ejercicio
     private List<Ejercicio> exerciseList;
     private OnExerciseClickListener listener;
 
-    public EjerciciosDisponiblesAdapter(List<Ejercicio> exerciseList, OnExerciseClickListener listener) {
+    public EjerciciosDisponiblesAdapter(List<Ejercicio> exerciseList,
+                                        OnExerciseClickListener listener) {
         this.exerciseList = exerciseList;
         this.listener = listener;
     }
@@ -41,9 +43,13 @@ public class EjerciciosDisponiblesAdapter extends RecyclerView.Adapter<Ejercicio
 
         Ejercicio exercise = exerciseList.get(position);
 
-        holder.tvNombre.setText(exercise.getNombre());
-        holder.tvParteCuerpo.setText(exercise.getParteCuerpo());
-        holder.tvElemento.setText(exercise.getElemento());
+        String nombre = exercise.getNombre();
+        String parteCuerpo = exercise.getParteCuerpo();
+        String elemento = exercise.getElemento();
+
+        holder.tvNombre.setText(nombre != null ? nombre : "");
+        holder.tvParteCuerpo.setText(parteCuerpo != null ? parteCuerpo : "");
+        holder.tvElemento.setText(elemento != null ? elemento : "");
 
         holder.btnAdd.setOnClickListener(v -> {
             if (listener != null) {
@@ -58,7 +64,10 @@ public class EjerciciosDisponiblesAdapter extends RecyclerView.Adapter<Ejercicio
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre, tvParteCuerpo, tvElemento;
+
+        TextView tvNombre;
+        TextView tvParteCuerpo;
+        TextView tvElemento;
         Button btnAdd;
 
         public ViewHolder(@NonNull View itemView) {
