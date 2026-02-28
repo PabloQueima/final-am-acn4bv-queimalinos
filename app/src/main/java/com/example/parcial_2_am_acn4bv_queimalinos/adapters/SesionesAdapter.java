@@ -13,10 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parcial_2_am_acn4bv_queimalinos.R;
 import com.example.parcial_2_am_acn4bv_queimalinos.activities.EditarSesionActivity;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
 
 import java.util.List;
-import java.util.Map;
 
 public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHolder> {
 
@@ -25,11 +24,11 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
     }
 
     private Context context;
-    private List<DocumentSnapshot> sesiones;
+    private List<Sesion> sesiones;
     private OnSesionActionListener listener;
 
     public SesionesAdapter(Context context,
-                           List<DocumentSnapshot> sesiones,
+                           List<Sesion> sesiones,
                            OnSesionActionListener listener) {
         this.context = context;
         this.sesiones = sesiones;
@@ -47,34 +46,27 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        DocumentSnapshot doc = sesiones.get(position);
+        Sesion sesion = sesiones.get(position);
 
-        String titulo = doc.getString("titulo");
-        String clienteUid = doc.getString("clienteUid");
-        String createdAt = doc.getString("createdAt");
-
-        List<Map<String, Object>> ejercicios =
-                (List<Map<String, Object>>) doc.get("ejercicios");
-
-        int cantidadEjercicios = ejercicios != null ? ejercicios.size() : 0;
-
-        holder.txtTitulo.setText(titulo != null ? titulo : "");
-        holder.txtCliente.setText("Cliente: " + (clienteUid != null ? clienteUid : ""));
-        holder.txtEjercicios.setText("Ejercicios: " + cantidadEjercicios);
-        holder.txtFecha.setText("Creado: " + (createdAt != null ? createdAt : ""));
+        holder.txtTitulo.setText(sesion.getTitulo() != null ? sesion.getTitulo() : "");
+        holder.txtCliente.setText("Cliente: " +
+                (sesion.getClienteUid() != null ? sesion.getClienteUid() : ""));
+        holder.txtEjercicios.setText("Ejercicios: " +
+                (sesion.getEjercicios() != null ? sesion.getEjercicios().size() : 0));
+        holder.txtFecha.setText("Creado: " +
+                (sesion.getCreatedAt() != null ? sesion.getCreatedAt() : ""));
 
         holder.btnEditar.setOnClickListener(v -> {
-            String id = doc.getId();
-            if (id == null || id.isEmpty()) return;
+            if (sesion.getId() == null) return;
 
             Intent i = new Intent(context, EditarSesionActivity.class);
-            i.putExtra("sesionId", id);
+            i.putExtra("sesionId", sesion.getId());
             context.startActivity(i);
         });
 
         holder.btnEliminar.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDelete(doc.getId());
+            if (listener != null && sesion.getId() != null) {
+                listener.onDelete(sesion.getId());
             }
         });
     }

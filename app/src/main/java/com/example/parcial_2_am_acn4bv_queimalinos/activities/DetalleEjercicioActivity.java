@@ -71,8 +71,8 @@ public class DetalleEjercicioActivity extends AppCompatActivity {
                     if (ej.getImageUrl() != null && !ej.getImageUrl().isEmpty()) {
                         Glide.with(this)
                                 .load(ej.getImageUrl())
-                                .placeholder(R.drawable.ic_launcher_background)
-                                .error(R.drawable.ic_launcher_background)
+                                .placeholder(R.drawable.placeholder)
+                                .error(R.drawable.logo)
                                 .into(imgEjercicio);
                     }
                 })
