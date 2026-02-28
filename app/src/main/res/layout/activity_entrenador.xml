@@ -6,20 +6,27 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/etBuscarSesion"
-        android:hint="Buscar por nombre o clienteUid"
+        android:id="@+id/inputBuscarSesion"
+        android:hint="Buscar por título"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/btnNuevaSesion"
+        android:id="@+id/btnBuscarSesion"
+        android:text="Buscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnCrearSesion"
         android:text="Crear nueva sesión"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSesiones"
+        android:id="@+id/recyclerSesiones"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

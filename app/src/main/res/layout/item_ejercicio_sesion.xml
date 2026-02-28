@@ -5,7 +5,8 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/txtNombreSesion"
+        android:id="@+id/tvExerciseId"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/inputSeries"
+            android:id="@+id/etSeries"
             android:hint="Series"
             android:inputType="number"
             android:layout_weight="1"
@@ -23,16 +24,17 @@
             android:layout_height="wrap_content"/>
 
         <EditText
-            android:id="@+id/inputReps"
+            android:id="@+id/etReps"
             android:hint="Reps"
             android:inputType="number"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btnEliminarEjercicio"
-            android:text="X"
+        <ImageButton
+            android:id="@+id/btnRemoveExercise"
+            android:src="@android:drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -13,21 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parcial_2_am_acn4bv_queimalinos.R;
-import com.example.parcial_2_am_acn4bv_queimalinos.model.SessionExercise;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
 
 import java.util.List;
 
-public class SessionExerciseAdapter extends RecyclerView.Adapter<SessionExerciseAdapter.ViewHolder> {
+public class EjerciciosSesionAdapter extends RecyclerView.Adapter<EjerciciosSesionAdapter.ViewHolder> {
 
     public interface OnRemoveListener {
-        void onRemove(SessionExercise exercise);
+        void onRemove(Sesion.EjercicioRef ejercicio);
     }
 
-    private List<SessionExercise> sessionExercises;
+    private List<Sesion.EjercicioRef> ejercicios;
     private OnRemoveListener listener;
 
-    public SessionExerciseAdapter(List<SessionExercise> sessionExercises, OnRemoveListener listener) {
-        this.sessionExercises = sessionExercises;
+    public EjerciciosSesionAdapter(List<Sesion.EjercicioRef> ejercicios, OnRemoveListener listener) {
+        this.ejercicios = ejercicios;
         this.listener = listener;
     }
 
@@ -35,30 +35,35 @@ public class SessionExerciseAdapter extends RecyclerView.Adapter<SessionExercise
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_session_exercise, parent, false);
+                .inflate(R.layout.item_ejercicio_sesion, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SessionExercise exercise = sessionExercises.get(position);
 
-        holder.tvExerciseId.setText("ID: " + exercise.getExerciseId());
-        holder.etSeries.setText(String.valueOf(exercise.getSeries()));
-        holder.etReps.setText(String.valueOf(exercise.getReps()));
+        Sesion.EjercicioRef ejercicio = ejercicios.get(position);
+
+        holder.tvExerciseId.setText("ID: " + ejercicio.getId());
+        holder.etSeries.setText(String.valueOf(ejercicio.getSeries()));
+        holder.etReps.setText(String.valueOf(ejercicio.getReps()));
 
         holder.etSeries.addTextChangedListener(new SimpleWatcher(s ->
-                exercise.setSeries(parseInt(s))));
+                ejercicio.setSeries(parseInt(s))));
 
         holder.etReps.addTextChangedListener(new SimpleWatcher(s ->
-                exercise.setReps(parseInt(s))));
+                ejercicio.setReps(parseInt(s))));
 
-        holder.btnRemove.setOnClickListener(v -> listener.onRemove(exercise));
+        holder.btnRemove.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onRemove(ejercicio);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return sessionExercises.size();
+        return ejercicios != null ? ejercicios.size() : 0;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

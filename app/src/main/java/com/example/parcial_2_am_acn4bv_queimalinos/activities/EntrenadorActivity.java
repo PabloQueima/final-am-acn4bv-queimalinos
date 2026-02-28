@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.parcial_2_am_acn4bv_queimalinos.R;
+import com.example.parcial_2_am_acn4bv_queimalinos.adapters.SesionesAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 
@@ -43,13 +45,14 @@ public class EntrenadorActivity extends AppCompatActivity {
         Button btnCrear = findViewById(R.id.btnCrearSesion);
         Button btnBuscar = findViewById(R.id.btnBuscarSesion);
 
-        adapter = new SesionesAdapter(this, sesiones);
+        adapter = new SesionesAdapter(this, sesiones, this::eliminarSesion);
+
         recyclerSesiones.setLayoutManager(new LinearLayoutManager(this));
         recyclerSesiones.setAdapter(adapter);
 
-        btnCrear.setOnClickListener(v -> {
-            startActivity(new Intent(this, EditarSesionActivity.class));
-        });
+        btnCrear.setOnClickListener(v ->
+                startActivity(new Intent(this, EditarSesionActivity.class))
+        );
 
         btnBuscar.setOnClickListener(v -> {
             sesiones.clear();
@@ -92,11 +95,11 @@ public class EntrenadorActivity extends AppCompatActivity {
         });
     }
 
-    public void eliminarSesion(String id) {
+    private void eliminarSesion(String id) {
         new AlertDialog.Builder(this)
                 .setTitle("Eliminar sesión")
                 .setMessage("¿Confirmar eliminación?")
-                .setPositiveButton("Sí", (d,w) -> {
+                .setPositiveButton("Sí", (d, w) -> {
                     db.collection("sesiones").document(id).delete();
                     sesiones.clear();
                     lastVisible = null;

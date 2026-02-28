@@ -10,20 +10,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parcial_2_am_acn4bv_queimalinos.R;
-import com.example.parcial_2_am_acn4bv_queimalinos.model.Exercise;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
 
 import java.util.List;
 
-public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHolder> {
+public class EjerciciosDisponiblesAdapter extends RecyclerView.Adapter<EjerciciosDisponiblesAdapter.ViewHolder> {
 
     public interface OnExerciseClickListener {
-        void onAdd(Exercise exercise);
+        void onAdd(Ejercicio exercise);
     }
 
-    private List<Exercise> exerciseList;
+    private List<Ejercicio> exerciseList;
     private OnExerciseClickListener listener;
 
-    public ExerciseAdapter(List<Exercise> exerciseList, OnExerciseClickListener listener) {
+    public EjerciciosDisponiblesAdapter(List<Ejercicio> exerciseList, OnExerciseClickListener listener) {
         this.exerciseList = exerciseList;
         this.listener = listener;
     }
@@ -32,24 +32,29 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_exercise_selectable, parent, false);
+                .inflate(R.layout.item_ejercicio_disponible, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Exercise exercise = exerciseList.get(position);
+
+        Ejercicio exercise = exerciseList.get(position);
 
         holder.tvNombre.setText(exercise.getNombre());
         holder.tvParteCuerpo.setText(exercise.getParteCuerpo());
         holder.tvElemento.setText(exercise.getElemento());
 
-        holder.btnAdd.setOnClickListener(v -> listener.onAdd(exercise));
+        holder.btnAdd.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onAdd(exercise);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return exerciseList.size();
+        return exerciseList != null ? exerciseList.size() : 0;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.*;
 import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
-import com.squareup.picasso.Picasso;
+import com.example.parcial_2_am_acn4bv_queimalinos.R;
+import com.bumptech.glide.Glide;
 
 public class DetalleEjercicioActivity extends AppCompatActivity {
 
@@ -68,14 +69,14 @@ public class DetalleEjercicioActivity extends AppCompatActivity {
                     txtParteCuerpo.setText("Parte del cuerpo: " + ej.getParteCuerpo());
 
                     if (ej.getImageUrl() != null && !ej.getImageUrl().isEmpty()) {
-                        Picasso.get()
+                        Glide.with(this)
                                 .load(ej.getImageUrl())
                                 .placeholder(R.drawable.ic_launcher_background)
                                 .error(R.drawable.ic_launcher_background)
                                 .into(imgEjercicio);
                     }
                 })
-                .addOnFailureListener(e -> 
+                .addOnFailureListener(e ->
                         Toast.makeText(this, "Error de conexión", Toast.LENGTH_SHORT).show()
                 );
     }

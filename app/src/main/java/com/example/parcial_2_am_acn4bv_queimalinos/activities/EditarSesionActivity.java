@@ -7,6 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.parcial_2_am_acn4bv_queimalinos.R;
+import com.example.parcial_2_am_acn4bv_queimalinos.adapters.EjerciciosDisponiblesAdapter;
+import com.example.parcial_2_am_acn4bv_queimalinos.adapters.EjerciciosSesionAdapter;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 
@@ -22,8 +27,8 @@ public class EditarSesionActivity extends AppCompatActivity {
     private Spinner spinnerClientes;
     private RecyclerView recyclerEjercicios, recyclerSesion;
 
-    private List<DocumentSnapshot> ejerciciosDisponibles = new ArrayList<>();
-    private List<Map<String,Object>> ejerciciosSesion = new ArrayList<>();
+    private List<Ejercicio> ejerciciosDisponibles = new ArrayList<>();
+    private List<Sesion.EjercicioRef> ejerciciosSesion = new ArrayList<>();
     private List<String> clientesIds = new ArrayList<>();
 
     private EjerciciosDisponiblesAdapter adapterDisponibles;
@@ -46,8 +51,12 @@ public class EditarSesionActivity extends AppCompatActivity {
         recyclerEjercicios = findViewById(R.id.recyclerEjercicios);
         recyclerSesion = findViewById(R.id.recyclerSesion);
 
-        adapterDisponibles = new EjerciciosDisponiblesAdapter(this, ejerciciosDisponibles, this::agregarEjercicio);
-        adapterSesion = new EjerciciosSesionAdapter(this, ejerciciosSesion);
+        adapterDisponibles = new EjerciciosDisponiblesAdapter(ejerciciosDisponibles, this::agregarEjercicio);
+
+        adapterSesion = new EjerciciosSesionAdapter(ejerciciosSesion, ejercicio -> {
+            ejerciciosSesion.remove(ejercicio);
+            adapterSesion.notifyDataSetChanged();
+        });
 
         recyclerEjercicios.setLayoutManager(new LinearLayoutManager(this));
         recyclerSesion.setLayoutManager(new LinearLayoutManager(this));
@@ -55,8 +64,11 @@ public class EditarSesionActivity extends AppCompatActivity {
         recyclerEjercicios.setAdapter(adapterDisponibles);
         recyclerSesion.setAdapter(adapterSesion);
 
-        findViewById(R.id.btnBuscarEjercicio).setOnClickListener(v -> cargarEjercicios(inputBuscar.getText().toString()));
-        findViewById(R.id.btnGuardarSesion).setOnClickListener(v -> guardarSesion());
+        findViewById(R.id.btnBuscarEjercicio)
+                .setOnClickListener(v -> cargarEjercicios(inputBuscar.getText().toString()));
+
+        findViewById(R.id.btnGuardarSesion)
+                .setOnClickListener(v -> guardarSesion());
 
         sesionId = getIntent().getStringExtra("sesionId");
 
@@ -71,6 +83,7 @@ public class EditarSesionActivity extends AppCompatActivity {
                 .whereEqualTo("rol", "cliente")
                 .get()
                 .addOnSuccessListener(q -> {
+
                     List<String> nombres = new ArrayList<>();
                     clientesIds.clear();
 
@@ -88,7 +101,10 @@ public class EditarSesionActivity extends AppCompatActivity {
     }
 
     private void cargarEjercicios(String filtro) {
-        Query query = db.collection("ejercicios").orderBy("nombre").limit(20);
+
+        Query query = db.collection("ejercicios")
+                .orderBy("nombre")
+                .limit(20);
 
         if (!filtro.isEmpty()) {
             query = query
@@ -97,39 +113,61 @@ public class EditarSesionActivity extends AppCompatActivity {
         }
 
         query.get().addOnSuccessListener(q -> {
+
             ejerciciosDisponibles.clear();
-            ejerciciosDisponibles.addAll(q.getDocuments());
+
+            for (DocumentSnapshot doc : q.getDocuments()) {
+                Ejercicio e = doc.toObject(Ejercicio.class);
+                if (e != null) {
+                    ejerciciosDisponibles.add(e);
+                }
+            }
+
             adapterDisponibles.notifyDataSetChanged();
         });
     }
 
-    private void agregarEjercicio(DocumentSnapshot doc) {
+    private void agregarEjercicio(Ejercicio ejercicio) {
 
-        int id = doc.getLong("id").intValue();
-
-        for (Map<String,Object> e : ejerciciosSesion) {
-            if ((int)e.get("id") == id) return;
+        for (Sesion.EjercicioRef e : ejerciciosSesion) {
+            if (e.getId() == ejercicio.getId()) return;
         }
 
-        Map<String,Object> nuevo = new HashMap<>();
-        nuevo.put("id", id);
-        nuevo.put("series", 3);
-        nuevo.put("reps", 10);
+        Sesion.EjercicioRef nuevo = new Sesion.EjercicioRef();
+        nuevo.setId(ejercicio.getId());
+        nuevo.setSeries(3);
+        nuevo.setReps(10);
 
         ejerciciosSesion.add(nuevo);
         adapterSesion.notifyDataSetChanged();
     }
 
     private void cargarSesion() {
-        db.collection("sesiones").document(sesionId)
+
+        db.collection("sesiones")
+                .document(sesionId)
                 .get()
                 .addOnSuccessListener(doc -> {
 
                     inputTitulo.setText(doc.getString("titulo"));
                     createdAtOriginal = doc.getString("createdAt");
 
+                    List<Map<String, Object>> lista =
+                            (List<Map<String, Object>>) doc.get("ejercicios");
+
                     ejerciciosSesion.clear();
-                    ejerciciosSesion.addAll((List<Map<String,Object>>) doc.get("ejercicios"));
+
+                    if (lista != null) {
+                        for (Map<String, Object> m : lista) {
+
+                            Sesion.EjercicioRef ref = new Sesion.EjercicioRef();
+                            ref.setId(((Long) m.get("id")).intValue());
+                            ref.setSeries(((Long) m.get("series")).intValue());
+                            ref.setReps(((Long) m.get("reps")).intValue());
+
+                            ejerciciosSesion.add(ref);
+                        }
+                    }
 
                     adapterSesion.notifyDataSetChanged();
                 });
@@ -142,7 +180,7 @@ public class EditarSesionActivity extends AppCompatActivity {
 
         String clienteUid = clientesIds.get(spinnerClientes.getSelectedItemPosition());
 
-        Map<String,Object> sesion = new HashMap<>();
+        Map<String, Object> sesion = new HashMap<>();
         sesion.put("titulo", titulo);
         sesion.put("clienteUid", clienteUid);
         sesion.put("entrenadorUid", auth.getCurrentUser().getUid());
