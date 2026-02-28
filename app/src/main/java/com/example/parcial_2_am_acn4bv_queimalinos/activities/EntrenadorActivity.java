@@ -31,7 +31,7 @@ public class EntrenadorActivity extends AppCompatActivity {
     private EditText inputBuscar;
 
     private List<Sesion> sesiones = new ArrayList<>();
-    private String filtroActual = "";
+    private List<Sesion> sesionesFiltradas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class EntrenadorActivity extends AppCompatActivity {
         Button btnCrear = findViewById(R.id.btnCrearSesion);
         Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
-        adapter = new SesionesAdapter(this, sesiones, this::eliminarSesion);
+        adapter = new SesionesAdapter(this, sesionesFiltradas, this::eliminarSesion);
         recyclerSesiones.setLayoutManager(new LinearLayoutManager(this));
         recyclerSesiones.setAdapter(adapter);
 
@@ -71,10 +71,8 @@ public class EntrenadorActivity extends AppCompatActivity {
         inputBuscar.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filtroActual = s.toString().trim();
-                cargarSesiones();
+                filtrarSesiones(s.toString().trim());
             }
-
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
         });
@@ -86,17 +84,9 @@ public class EntrenadorActivity extends AppCompatActivity {
 
         String uid = auth.getCurrentUser().getUid();
 
-        Query query = db.collection("sesiones")
+        db.collection("sesiones")
                 .whereEqualTo("entrenadorUid", uid)
-                .orderBy("titulo");
-
-        if (!filtroActual.isEmpty()) {
-            query = query
-                    .startAt(filtroActual)
-                    .endAt(filtroActual + "\uf8ff");
-        }
-
-        query.get()
+                .get()
                 .addOnSuccessListener(q -> {
 
                     sesiones.clear();
@@ -109,12 +99,30 @@ public class EntrenadorActivity extends AppCompatActivity {
                         }
                     }
 
-                    adapter.notifyDataSetChanged();
+                    filtrarSesiones(inputBuscar.getText().toString().trim());
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FIRESTORE_ERROR", e.getMessage());
                     Toast.makeText(this, "Error al cargar sesiones", Toast.LENGTH_LONG).show();
                 });
+    }
+
+    private void filtrarSesiones(String texto) {
+
+        sesionesFiltradas.clear();
+
+        if (texto.isEmpty()) {
+            sesionesFiltradas.addAll(sesiones);
+        } else {
+            for (Sesion s : sesiones) {
+                if (s.getTitulo() != null &&
+                        s.getTitulo().toLowerCase().contains(texto.toLowerCase())) {
+                    sesionesFiltradas.add(s);
+                }
+            }
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
     private void eliminarSesion(String id) {

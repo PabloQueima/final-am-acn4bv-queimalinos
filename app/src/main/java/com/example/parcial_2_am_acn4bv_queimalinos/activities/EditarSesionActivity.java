@@ -30,6 +30,7 @@ public class EditarSesionActivity extends AppCompatActivity {
     private RecyclerView recyclerEjercicios, recyclerSesion;
 
     private List<Ejercicio> ejerciciosDisponibles = new ArrayList<>();
+    private List<Ejercicio> ejerciciosFiltrados = new ArrayList<>();
     private List<Sesion.EjercicioRef> ejerciciosSesion = new ArrayList<>();
     private List<String> clientesIds = new ArrayList<>();
 
@@ -56,7 +57,7 @@ public class EditarSesionActivity extends AppCompatActivity {
         recyclerEjercicios = findViewById(R.id.recyclerEjercicios);
         recyclerSesion = findViewById(R.id.recyclerSesion);
 
-        adapterDisponibles = new EjerciciosDisponiblesAdapter(ejerciciosDisponibles, this::agregarEjercicio);
+        adapterDisponibles = new EjerciciosDisponiblesAdapter(ejerciciosFiltrados, this::agregarEjercicio);
         adapterSesion = new EjerciciosSesionAdapter(ejerciciosSesion, ejercicio -> {
             ejerciciosSesion.remove(ejercicio);
             adapterSesion.notifyDataSetChanged();
@@ -70,48 +71,56 @@ public class EditarSesionActivity extends AppCompatActivity {
         findViewById(R.id.btnGuardarSesion)
                 .setOnClickListener(v -> guardarSesion());
 
-        // Autofiltro ejercicios
         inputBuscar.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                cargarEjercicios(s.toString().trim());
+                filtrarEjercicios(s.toString().trim());
             }
-
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
         });
 
         cargarClientes();
-        cargarEjercicios("");
+        cargarEjercicios();
 
         if (sesionId != null && !sesionId.isEmpty()) {
             cargarSesion();
         }
     }
 
-    private void cargarEjercicios(String filtro) {
+    private void cargarEjercicios() {
 
-        Query query = db.collection("ejercicios")
-                .orderBy("nombre")
-                .limit(20);
+        db.collection("ejercicios")
+                .get()
+                .addOnSuccessListener(q -> {
 
-        if (!filtro.isEmpty()) {
-            query = query
-                    .startAt(filtro)
-                    .endAt(filtro + "\uf8ff");
+                    ejerciciosDisponibles.clear();
+
+                    for (DocumentSnapshot doc : q.getDocuments()) {
+                        Ejercicio e = doc.toObject(Ejercicio.class);
+                        if (e != null) ejerciciosDisponibles.add(e);
+                    }
+
+                    filtrarEjercicios("");
+                });
+    }
+
+    private void filtrarEjercicios(String texto) {
+
+        ejerciciosFiltrados.clear();
+
+        if (texto.isEmpty()) {
+            ejerciciosFiltrados.addAll(ejerciciosDisponibles);
+        } else {
+            for (Ejercicio e : ejerciciosDisponibles) {
+                if (e.getNombre() != null &&
+                        e.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                    ejerciciosFiltrados.add(e);
+                }
+            }
         }
 
-        query.get().addOnSuccessListener(q -> {
-
-            ejerciciosDisponibles.clear();
-
-            for (DocumentSnapshot doc : q.getDocuments()) {
-                Ejercicio e = doc.toObject(Ejercicio.class);
-                if (e != null) ejerciciosDisponibles.add(e);
-            }
-
-            adapterDisponibles.notifyDataSetChanged();
-        });
+        adapterDisponibles.notifyDataSetChanged();
     }
 
     private void cargarClientes() {
@@ -138,7 +147,6 @@ public class EditarSesionActivity extends AppCompatActivity {
                                     nombres)
                     );
 
-                    // Si estamos editando, seleccionar cliente correcto
                     if (clienteUidOriginal != null) {
                         int index = clientesIds.indexOf(clienteUidOriginal);
                         if (index >= 0) spinnerClientes.setSelection(index);
@@ -151,7 +159,7 @@ public class EditarSesionActivity extends AppCompatActivity {
         if (ejercicio == null) return;
 
         for (Sesion.EjercicioRef e : ejerciciosSesion) {
-            if (e.getId() == ejercicio.getId()) return;
+            if (Objects.equals(e.getId(), ejercicio.getId())) return;
         }
 
         Sesion.EjercicioRef nuevo = new Sesion.EjercicioRef();
