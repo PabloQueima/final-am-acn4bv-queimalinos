@@ -1,6 +1,8 @@
 package com.example.parcial_2_am_acn4bv_queimalinos.activities;
 
 import android.os.Bundle;
+import android.text.TextWatcher;
+import android.text.Editable;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +38,7 @@ public class EditarSesionActivity extends AppCompatActivity {
 
     private String sesionId = null;
     private String createdAtOriginal = null;
+    private String clienteUidOriginal = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class EditarSesionActivity extends AppCompatActivity {
         recyclerSesion = findViewById(R.id.recyclerSesion);
 
         adapterDisponibles = new EjerciciosDisponiblesAdapter(ejerciciosDisponibles, this::agregarEjercicio);
-
         adapterSesion = new EjerciciosSesionAdapter(ejerciciosSesion, ejercicio -> {
             ejerciciosSesion.remove(ejercicio);
             adapterSesion.notifyDataSetChanged();
@@ -65,13 +67,19 @@ public class EditarSesionActivity extends AppCompatActivity {
         recyclerEjercicios.setAdapter(adapterDisponibles);
         recyclerSesion.setAdapter(adapterSesion);
 
-        findViewById(R.id.btnBuscarEjercicio)
-                .setOnClickListener(v ->
-                        cargarEjercicios(inputBuscar.getText().toString().trim())
-                );
-
         findViewById(R.id.btnGuardarSesion)
                 .setOnClickListener(v -> guardarSesion());
+
+        // Autofiltro ejercicios
+        inputBuscar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                cargarEjercicios(s.toString().trim());
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+        });
 
         cargarClientes();
         cargarEjercicios("");
@@ -79,6 +87,31 @@ public class EditarSesionActivity extends AppCompatActivity {
         if (sesionId != null && !sesionId.isEmpty()) {
             cargarSesion();
         }
+    }
+
+    private void cargarEjercicios(String filtro) {
+
+        Query query = db.collection("ejercicios")
+                .orderBy("nombre")
+                .limit(20);
+
+        if (!filtro.isEmpty()) {
+            query = query
+                    .startAt(filtro)
+                    .endAt(filtro + "\uf8ff");
+        }
+
+        query.get().addOnSuccessListener(q -> {
+
+            ejerciciosDisponibles.clear();
+
+            for (DocumentSnapshot doc : q.getDocuments()) {
+                Ejercicio e = doc.toObject(Ejercicio.class);
+                if (e != null) ejerciciosDisponibles.add(e);
+            }
+
+            adapterDisponibles.notifyDataSetChanged();
+        });
     }
 
     private void cargarClientes() {
@@ -104,32 +137,13 @@ public class EditarSesionActivity extends AppCompatActivity {
                                     android.R.layout.simple_spinner_dropdown_item,
                                     nombres)
                     );
+
+                    // Si estamos editando, seleccionar cliente correcto
+                    if (clienteUidOriginal != null) {
+                        int index = clientesIds.indexOf(clienteUidOriginal);
+                        if (index >= 0) spinnerClientes.setSelection(index);
+                    }
                 });
-    }
-
-    private void cargarEjercicios(String filtro) {
-
-        Query query = db.collection("ejercicios")
-                .orderBy("nombre")
-                .limit(20);
-
-        if (!filtro.isEmpty()) {
-            query = query
-                    .whereGreaterThanOrEqualTo("nombre", filtro)
-                    .whereLessThanOrEqualTo("nombre", filtro + "\uf8ff");
-        }
-
-        query.get().addOnSuccessListener(q -> {
-
-            ejerciciosDisponibles.clear();
-
-            for (DocumentSnapshot doc : q.getDocuments()) {
-                Ejercicio e = doc.toObject(Ejercicio.class);
-                if (e != null) ejerciciosDisponibles.add(e);
-            }
-
-            adapterDisponibles.notifyDataSetChanged();
-        });
     }
 
     private void agregarEjercicio(Ejercicio ejercicio) {
@@ -160,6 +174,7 @@ public class EditarSesionActivity extends AppCompatActivity {
 
                     inputTitulo.setText(doc.getString("titulo"));
                     createdAtOriginal = doc.getString("createdAt");
+                    clienteUidOriginal = doc.getString("clienteUid");
 
                     List<Map<String, Object>> lista =
                             (List<Map<String, Object>>) doc.get("ejercicios");
@@ -178,7 +193,7 @@ public class EditarSesionActivity extends AppCompatActivity {
                             Object reps = m.get("reps");
 
                             if (id instanceof Long)
-                                ref.setId(((Long) id).intValue());
+                                ref.setId((Long) id);
 
                             if (series instanceof Long)
                                 ref.setSeries(((Long) series).intValue());
@@ -197,9 +212,33 @@ public class EditarSesionActivity extends AppCompatActivity {
     private void guardarSesion() {
 
         String titulo = inputTitulo.getText().toString().trim();
-        if (titulo.isEmpty() || ejerciciosSesion.isEmpty()) return;
 
-        if (spinnerClientes.getSelectedItemPosition() < 0) return;
+        if (titulo.isEmpty()) {
+            Toast.makeText(this, "Ingrese un título", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (ejerciciosSesion.isEmpty()) {
+            Toast.makeText(this, "Agregue al menos un ejercicio", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (spinnerClientes.getSelectedItemPosition() < 0) {
+            Toast.makeText(this, "Seleccione un cliente", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        for (Sesion.EjercicioRef e : ejerciciosSesion) {
+            if (e.getSeries() <= 0 || e.getReps() <= 0) {
+                Toast.makeText(this, "Series y reps deben ser mayores a 0", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "Sesión expirada", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String clienteUid = clientesIds.get(spinnerClientes.getSelectedItemPosition());
 
@@ -212,13 +251,24 @@ public class EditarSesionActivity extends AppCompatActivity {
 
         if (sesionId == null || sesionId.isEmpty()) {
             sesion.put("createdAt", isoNow());
-            db.collection("sesiones").add(sesion);
-        } else {
-            sesion.put("createdAt", createdAtOriginal);
-            db.collection("sesiones").document(sesionId).set(sesion);
-        }
 
-        finish();
+            db.collection("sesiones")
+                    .add(sesion)
+                    .addOnSuccessListener(r -> finish())
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Error al guardar", Toast.LENGTH_SHORT).show());
+
+        } else {
+
+            sesion.put("createdAt", createdAtOriginal);
+
+            db.collection("sesiones")
+                    .document(sesionId)
+                    .set(sesion)
+                    .addOnSuccessListener(r -> finish())
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show());
+        }
     }
 
     private String isoNow() {

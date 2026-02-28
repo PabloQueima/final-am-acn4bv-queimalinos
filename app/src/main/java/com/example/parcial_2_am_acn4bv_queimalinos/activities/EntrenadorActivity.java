@@ -2,10 +2,10 @@ package com.example.parcial_2_am_acn4bv_queimalinos.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,7 +51,6 @@ public class EntrenadorActivity extends AppCompatActivity {
         inputBuscar = findViewById(R.id.inputBuscarSesion);
 
         Button btnCrear = findViewById(R.id.btnCrearSesion);
-        Button btnBuscar = findViewById(R.id.btnBuscarSesion);
         Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
         adapter = new SesionesAdapter(this, sesiones, this::eliminarSesion);
@@ -62,16 +61,22 @@ public class EntrenadorActivity extends AppCompatActivity {
                 startActivity(new Intent(this, EditarSesionActivity.class))
         );
 
-        btnBuscar.setOnClickListener(v -> {
-            filtroActual = inputBuscar.getText().toString().trim();
-            cargarSesiones();
-        });
-
         btnCerrarSesion.setOnClickListener(v -> {
             auth.signOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+        });
+
+        inputBuscar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtroActual = s.toString().trim();
+                cargarSesiones();
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
 
         cargarSesiones();
@@ -82,12 +87,13 @@ public class EntrenadorActivity extends AppCompatActivity {
         String uid = auth.getCurrentUser().getUid();
 
         Query query = db.collection("sesiones")
-                .whereEqualTo("entrenadorUid", uid);
+                .whereEqualTo("entrenadorUid", uid)
+                .orderBy("titulo");
 
         if (!filtroActual.isEmpty()) {
             query = query
-                    .whereGreaterThanOrEqualTo("titulo", filtroActual)
-                    .whereLessThanOrEqualTo("titulo", filtroActual + "\uf8ff");
+                    .startAt(filtroActual)
+                    .endAt(filtroActual + "\uf8ff");
         }
 
         query.get()
@@ -98,16 +104,12 @@ public class EntrenadorActivity extends AppCompatActivity {
                     for (DocumentSnapshot doc : q.getDocuments()) {
                         Sesion sesion = doc.toObject(Sesion.class);
                         if (sesion != null) {
-                            sesion.setId(doc.getId()); // IMPORTANTE
+                            sesion.setId(doc.getId());
                             sesiones.add(sesion);
                         }
                     }
 
                     adapter.notifyDataSetChanged();
-
-                    if (q.isEmpty()) {
-                        Toast.makeText(this, "No hay sesiones", Toast.LENGTH_SHORT).show();
-                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FIRESTORE_ERROR", e.getMessage());
@@ -120,16 +122,20 @@ public class EntrenadorActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Eliminar sesión")
                 .setMessage("¿Confirmar eliminación?")
-                .setPositiveButton("Sí", (d, w) -> {
-
-                    db.collection("sesiones").document(id).delete()
-                            .addOnSuccessListener(a -> cargarSesiones())
-                            .addOnFailureListener(e ->
-                                    Toast.makeText(this, "Error al eliminar", Toast.LENGTH_SHORT).show()
-                            );
-
-                })
+                .setPositiveButton("Sí", (d, w) ->
+                        db.collection("sesiones").document(id).delete()
+                                .addOnSuccessListener(a -> cargarSesiones())
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(this, "Error al eliminar", Toast.LENGTH_SHORT).show()
+                                )
+                )
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarSesiones();
     }
 }
