@@ -12,7 +12,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,43 +21,43 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".ClienteActivity"
+            android:name=".activities.ClienteActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".EntrenadorActivity"
+            android:name=".activities.EntrenadorActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".EditarSesionActivity"
+            android:name=".activities.EditarSesionActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".AdminActivity"
+            android:name=".activities.AdminActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".AdminEjerciciosActivity"
+            android:name=".activities.AdminEjerciciosActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".AdminUsuariosActivity"
+            android:name=".activities.AdminUsuariosActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".RealizarSesionActivity"
+            android:name=".activities.RealizarSesionActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".DetalleEjercicioActivity"
+            android:name=".activities.DetalleEjercicioActivity"
             android:exported="false"/>
 
     </application>

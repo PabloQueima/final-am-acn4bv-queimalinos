@@ -45,6 +45,8 @@ public class EditarSesionActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
+        sesionId = getIntent().getStringExtra("sesionId");
+
         inputTitulo = findViewById(R.id.inputTitulo);
         inputBuscar = findViewById(R.id.inputBuscarEjercicio);
         spinnerClientes = findViewById(R.id.spinnerClientes);
@@ -60,25 +62,27 @@ public class EditarSesionActivity extends AppCompatActivity {
 
         recyclerEjercicios.setLayoutManager(new LinearLayoutManager(this));
         recyclerSesion.setLayoutManager(new LinearLayoutManager(this));
-
         recyclerEjercicios.setAdapter(adapterDisponibles);
         recyclerSesion.setAdapter(adapterSesion);
 
         findViewById(R.id.btnBuscarEjercicio)
-                .setOnClickListener(v -> cargarEjercicios(inputBuscar.getText().toString()));
+                .setOnClickListener(v ->
+                        cargarEjercicios(inputBuscar.getText().toString().trim())
+                );
 
         findViewById(R.id.btnGuardarSesion)
                 .setOnClickListener(v -> guardarSesion());
 
-        sesionId = getIntent().getStringExtra("sesionId");
-
         cargarClientes();
         cargarEjercicios("");
 
-        if (sesionId != null) cargarSesion();
+        if (sesionId != null && !sesionId.isEmpty()) {
+            cargarSesion();
+        }
     }
 
     private void cargarClientes() {
+
         db.collection("usuarios")
                 .whereEqualTo("rol", "cliente")
                 .get()
@@ -88,8 +92,11 @@ public class EditarSesionActivity extends AppCompatActivity {
                     clientesIds.clear();
 
                     for (DocumentSnapshot d : q) {
-                        nombres.add(d.getString("nombre"));
-                        clientesIds.add(d.getId());
+                        String nombre = d.getString("nombre");
+                        if (nombre != null) {
+                            nombres.add(nombre);
+                            clientesIds.add(d.getId());
+                        }
                     }
 
                     spinnerClientes.setAdapter(
@@ -118,9 +125,7 @@ public class EditarSesionActivity extends AppCompatActivity {
 
             for (DocumentSnapshot doc : q.getDocuments()) {
                 Ejercicio e = doc.toObject(Ejercicio.class);
-                if (e != null) {
-                    ejerciciosDisponibles.add(e);
-                }
+                if (e != null) ejerciciosDisponibles.add(e);
             }
 
             adapterDisponibles.notifyDataSetChanged();
@@ -128,6 +133,8 @@ public class EditarSesionActivity extends AppCompatActivity {
     }
 
     private void agregarEjercicio(Ejercicio ejercicio) {
+
+        if (ejercicio == null) return;
 
         for (Sesion.EjercicioRef e : ejerciciosSesion) {
             if (e.getId() == ejercicio.getId()) return;
@@ -149,6 +156,8 @@ public class EditarSesionActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(doc -> {
 
+                    if (!doc.exists()) return;
+
                     inputTitulo.setText(doc.getString("titulo"));
                     createdAtOriginal = doc.getString("createdAt");
 
@@ -160,10 +169,22 @@ public class EditarSesionActivity extends AppCompatActivity {
                     if (lista != null) {
                         for (Map<String, Object> m : lista) {
 
+                            if (m == null) continue;
+
                             Sesion.EjercicioRef ref = new Sesion.EjercicioRef();
-                            ref.setId(((Long) m.get("id")).intValue());
-                            ref.setSeries(((Long) m.get("series")).intValue());
-                            ref.setReps(((Long) m.get("reps")).intValue());
+
+                            Object id = m.get("id");
+                            Object series = m.get("series");
+                            Object reps = m.get("reps");
+
+                            if (id instanceof Long)
+                                ref.setId(((Long) id).intValue());
+
+                            if (series instanceof Long)
+                                ref.setSeries(((Long) series).intValue());
+
+                            if (reps instanceof Long)
+                                ref.setReps(((Long) reps).intValue());
 
                             ejerciciosSesion.add(ref);
                         }
@@ -178,6 +199,8 @@ public class EditarSesionActivity extends AppCompatActivity {
         String titulo = inputTitulo.getText().toString().trim();
         if (titulo.isEmpty() || ejerciciosSesion.isEmpty()) return;
 
+        if (spinnerClientes.getSelectedItemPosition() < 0) return;
+
         String clienteUid = clientesIds.get(spinnerClientes.getSelectedItemPosition());
 
         Map<String, Object> sesion = new HashMap<>();
@@ -187,7 +210,7 @@ public class EditarSesionActivity extends AppCompatActivity {
         sesion.put("ejercicios", ejerciciosSesion);
         sesion.put("updatedAt", isoNow());
 
-        if (sesionId == null) {
+        if (sesionId == null || sesionId.isEmpty()) {
             sesion.put("createdAt", isoNow());
             db.collection("sesiones").add(sesion);
         } else {

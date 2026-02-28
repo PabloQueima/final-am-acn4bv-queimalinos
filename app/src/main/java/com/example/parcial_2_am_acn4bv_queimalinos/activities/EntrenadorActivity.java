@@ -2,8 +2,10 @@ package com.example.parcial_2_am_acn4bv_queimalinos.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,12 +27,10 @@ public class EntrenadorActivity extends AppCompatActivity {
 
     private RecyclerView recyclerSesiones;
     private SesionesAdapter adapter;
-
     private EditText inputBuscar;
-    private DocumentSnapshot lastVisible = null;
-    private boolean isLoading = false;
 
     private List<DocumentSnapshot> sesiones = new ArrayList<>();
+    private String filtroActual = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +40,20 @@ public class EntrenadorActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
+        if (auth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         recyclerSesiones = findViewById(R.id.recyclerSesiones);
         inputBuscar = findViewById(R.id.inputBuscarSesion);
+
         Button btnCrear = findViewById(R.id.btnCrearSesion);
         Button btnBuscar = findViewById(R.id.btnBuscarSesion);
+        Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
         adapter = new SesionesAdapter(this, sesiones, this::eliminarSesion);
-
         recyclerSesiones.setLayoutManager(new LinearLayoutManager(this));
         recyclerSesiones.setAdapter(adapter);
 
@@ -55,55 +62,63 @@ public class EntrenadorActivity extends AppCompatActivity {
         );
 
         btnBuscar.setOnClickListener(v -> {
-            sesiones.clear();
-            lastVisible = null;
-            cargarSesiones(inputBuscar.getText().toString().trim());
+            filtroActual = inputBuscar.getText().toString().trim();
+            cargarSesiones();
         });
 
-        cargarSesiones("");
+        btnCerrarSesion.setOnClickListener(v -> {
+            auth.signOut();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+
+        cargarSesiones();
     }
 
-    private void cargarSesiones(String filtro) {
+    private void cargarSesiones() {
 
-        if (isLoading) return;
-        isLoading = true;
+        String uid = auth.getCurrentUser().getUid();
 
         Query query = db.collection("sesiones")
-                .whereEqualTo("entrenadorUid", auth.getCurrentUser().getUid())
-                .orderBy("titulo")
-                .limit(10);
+                .whereEqualTo("entrenadorUid", uid);
 
-        if (!filtro.isEmpty()) {
+        if (!filtroActual.isEmpty()) {
             query = query
-                    .whereGreaterThanOrEqualTo("titulo", filtro)
-                    .whereLessThanOrEqualTo("titulo", filtro + "\uf8ff");
+                    .whereGreaterThanOrEqualTo("titulo", filtroActual)
+                    .whereLessThanOrEqualTo("titulo", filtroActual + "\uf8ff");
         }
 
-        if (lastVisible != null) {
-            query = query.startAfter(lastVisible);
-        }
+        query.get()
+                .addOnSuccessListener(q -> {
 
-        query.get().addOnSuccessListener(q -> {
+                    sesiones.clear();
+                    sesiones.addAll(q.getDocuments());
+                    adapter.notifyDataSetChanged();
 
-            if (!q.isEmpty()) {
-                lastVisible = q.getDocuments().get(q.size() - 1);
-                sesiones.addAll(q.getDocuments());
-                adapter.notifyDataSetChanged();
-            }
-
-            isLoading = false;
-        });
+                    if (q.isEmpty()) {
+                        Toast.makeText(this, "No hay sesiones", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIRESTORE_ERROR", e.getMessage());
+                    Toast.makeText(this, "Error al cargar sesiones", Toast.LENGTH_LONG).show();
+                });
     }
 
     private void eliminarSesion(String id) {
+
         new AlertDialog.Builder(this)
                 .setTitle("Eliminar sesión")
                 .setMessage("¿Confirmar eliminación?")
                 .setPositiveButton("Sí", (d, w) -> {
-                    db.collection("sesiones").document(id).delete();
-                    sesiones.clear();
-                    lastVisible = null;
-                    cargarSesiones("");
+
+                    db.collection("sesiones").document(id).delete()
+                            .addOnSuccessListener(a -> cargarSesiones())
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "Error al eliminar", Toast.LENGTH_SHORT).show()
+                            );
+
                 })
                 .setNegativeButton("No", null)
                 .show();

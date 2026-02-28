@@ -16,6 +16,7 @@ import com.example.parcial_2_am_acn4bv_queimalinos.activities.EditarSesionActivi
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
+import java.util.Map;
 
 public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHolder> {
 
@@ -48,11 +49,26 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
 
         DocumentSnapshot doc = sesiones.get(position);
 
-        holder.txtTitulo.setText(doc.getString("titulo"));
+        String titulo = doc.getString("titulo");
+        String clienteUid = doc.getString("clienteUid");
+        String createdAt = doc.getString("createdAt");
+
+        List<Map<String, Object>> ejercicios =
+                (List<Map<String, Object>>) doc.get("ejercicios");
+
+        int cantidadEjercicios = ejercicios != null ? ejercicios.size() : 0;
+
+        holder.txtTitulo.setText(titulo != null ? titulo : "");
+        holder.txtCliente.setText("Cliente: " + (clienteUid != null ? clienteUid : ""));
+        holder.txtEjercicios.setText("Ejercicios: " + cantidadEjercicios);
+        holder.txtFecha.setText("Creado: " + (createdAt != null ? createdAt : ""));
 
         holder.btnEditar.setOnClickListener(v -> {
+            String id = doc.getId();
+            if (id == null || id.isEmpty()) return;
+
             Intent i = new Intent(context, EditarSesionActivity.class);
-            i.putExtra("sesionId", doc.getId());
+            i.putExtra("sesionId", id);
             context.startActivity(i);
         });
 
@@ -70,12 +86,15 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtTitulo;
+        TextView txtTitulo, txtCliente, txtEjercicios, txtFecha;
         Button btnEditar, btnEliminar;
 
         ViewHolder(View itemView) {
             super(itemView);
             txtTitulo = itemView.findViewById(R.id.txtTitulo);
+            txtCliente = itemView.findViewById(R.id.txtCliente);
+            txtEjercicios = itemView.findViewById(R.id.txtEjercicios);
+            txtFecha = itemView.findViewById(R.id.txtFecha);
             btnEditar = itemView.findViewById(R.id.btnEditar);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
