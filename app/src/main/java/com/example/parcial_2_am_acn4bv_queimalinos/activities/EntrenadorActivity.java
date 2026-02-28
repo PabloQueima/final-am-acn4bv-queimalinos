@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parcial_2_am_acn4bv_queimalinos.R;
 import com.example.parcial_2_am_acn4bv_queimalinos.adapters.SesionesAdapter;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 
@@ -29,7 +30,7 @@ public class EntrenadorActivity extends AppCompatActivity {
     private SesionesAdapter adapter;
     private EditText inputBuscar;
 
-    private List<DocumentSnapshot> sesiones = new ArrayList<>();
+    private List<Sesion> sesiones = new ArrayList<>();
     private String filtroActual = "";
 
     @Override
@@ -93,7 +94,15 @@ public class EntrenadorActivity extends AppCompatActivity {
                 .addOnSuccessListener(q -> {
 
                     sesiones.clear();
-                    sesiones.addAll(q.getDocuments());
+
+                    for (DocumentSnapshot doc : q.getDocuments()) {
+                        Sesion sesion = doc.toObject(Sesion.class);
+                        if (sesion != null) {
+                            sesion.setId(doc.getId()); // IMPORTANTE
+                            sesiones.add(sesion);
+                        }
+                    }
+
                     adapter.notifyDataSetChanged();
 
                     if (q.isEmpty()) {

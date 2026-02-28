@@ -31,7 +31,7 @@ public class RealizarSesionActivity extends AppCompatActivity {
     private String sesionId;
     private Sesion sesion;
 
-    private Map<Integer, CheckBox> ejerciciosCheckMap = new HashMap<>();
+    private Map<Long, CheckBox> ejerciciosCheckMap = new HashMap<Long, CheckBox>();
 
     private long startTimeMillis;
     private Handler handler = new Handler();

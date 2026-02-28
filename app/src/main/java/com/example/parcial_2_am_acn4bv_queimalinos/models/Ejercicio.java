@@ -6,7 +6,7 @@ public class Ejercicio {
     private String createdAt;
     private String descripcion;
     private String elemento;
-    private int id;
+    private long id;
     private String nombre;
     private String parteCuerpo;
     private String imageUrl;
@@ -46,11 +46,11 @@ public class Ejercicio {
         this.elemento = elemento;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
