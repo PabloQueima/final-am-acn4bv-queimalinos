@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/inputBuscarSesion"
-        android:hint="Buscar por título"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:singleLine="true"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnCrearSesion"
-        android:text="Crear nueva sesión"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        <EditText
+            android:id="@+id/inputBuscarSesion"
+            android:hint="Buscar por título"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerSesiones"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="8dp"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <Button
+            android:id="@+id/btnCrearSesion"
+            android:text="Crear nueva sesión"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
 
-    <Button
-        android:id="@+id/btnCerrarSesion"
-        android:text="Cerrar sesión"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_red_dark"
-        android:textColor="@android:color/white"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerSesiones"
+            android:layout_width="match_parent"
+            android:layout_height="529dp"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="135dp"
+            android:layout_marginHorizontal="130dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:text="Deslogearse"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</ScrollView>

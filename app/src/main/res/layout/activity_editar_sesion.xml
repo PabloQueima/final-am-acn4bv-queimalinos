@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/inputTitulo"
-        android:hint="Título sesión"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textCapSentences"
-        android:singleLine="true"/>
+        android:layout_height="wrap_content">
 
-    <Spinner
-        android:id="@+id/spinnerClientes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        <EditText
+            android:id="@+id/inputTitulo"
+            android:hint="Título sesión"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            android:singleLine="true"/>
 
-    <EditText
-        android:id="@+id/inputBuscarEjercicio"
-        android:hint="Buscar ejercicio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:singleLine="true"/>
+        <Spinner
+            android:id="@+id/spinnerClientes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
 
-    <TextView
-        android:text="Ejercicios disponibles"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
+        <EditText
+            android:id="@+id/inputBuscarEjercicio"
+            android:hint="Buscar ejercicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerEjercicios"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <TextView
+            android:text="Ejercicios disponibles"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
 
-    <TextView
-        android:text="Ejercicios en sesión"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerEjercicios"
+            android:layout_width="match_parent"
+            android:layout_height="173dp"
+            android:overScrollMode="never" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerSesion"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <TextView
+            android:text="Ejercicios en sesión"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
 
-    <Button
-        android:id="@+id/btnGuardarSesion"
-        android:text="Guardar sesión"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerSesion"
+            android:layout_width="match_parent"
+            android:layout_height="277dp"
+            android:overScrollMode="never" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnGuardarSesion"
+            android:text="Guardar sesión"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
+</ScrollView>
