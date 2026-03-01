@@ -1,6 +1,6 @@
 <resources>
     <!-- App -->
-    <string name="app_name">App de Entrenamiento</string>
+    <string name="app_name">Plataforma de Entrenamiento</string>
 
     <!-- Textos generales -->
     <string name="texto_bienvenida">Plataforma de Entrenamiento</string>
@@ -17,32 +17,5 @@
     <string name="boton_ver_ejercicios">Ver ejercicios</string>
     <string name="boton_ocultar_ejercicios">Ocultar ejercicios</string>
 
-
-    <!-- Sesiones -->
-    <string name="sesion_piernas">Sesión 1: Piernas</string>
-    <string name="sesion_brazos">Sesión 2: Brazos</string>
-    <string name="sesion_core">Sesión 3: Core</string>
-
-    <!-- Ejercicios -->
-    <string name="ejercicio_sentadillas">Sentadillas</string>
-    <string name="ejercicio_zancadas">Zancadas</string>
-    <string name="ejercicio_peso_muerto">Peso muerto</string>
-    <string name="ejercicio_flexiones">Flexiones</string>
-    <string name="ejercicio_curl_biceps">Curl de bíceps</string>
-    <string name="ejercicio_triceps_fondo">Tríceps fondo</string>
-    <string name="ejercicio_plancha">Plancha</string>
-    <string name="ejercicio_abdominales">Abdominales</string>
-    <string name="ejercicio_mountain_climbers">Mountain Climbers</string>
-
-    <!-- Descripciones -->
-    <string name="desc_sentadillas">Ejercicio básico para trabajar cuádriceps y glúteos.</string>
-    <string name="desc_zancadas">Fortalece piernas y mejora el equilibrio.</string>
-    <string name="desc_peso_muerto">Trabaja femorales y zona lumbar.</string>
-    <string name="desc_flexiones">Trabaja pectorales, tríceps y hombros.</string>
-    <string name="desc_biceps">Fortalece los músculos del brazo.</string>
-    <string name="desc_triceps">Ejercicio para tríceps con peso corporal.</string>
-    <string name="desc_plancha">Ejercicio isométrico para abdomen y core.</string>
-    <string name="desc_abdominales">Ejercicio clásico de fortalecimiento abdominal.</string>
-    <string name="desc_mountain">Activa abdomen y mejora resistencia cardiovascular.</string>
 </resources>
 

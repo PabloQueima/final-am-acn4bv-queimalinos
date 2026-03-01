@@ -7,15 +7,15 @@
     android:padding="24dp">
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_marginBottom="16dp" />
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/logo" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Training App"
+        android:text="Plataforma de Entrenamiento"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginBottom="32dp" />

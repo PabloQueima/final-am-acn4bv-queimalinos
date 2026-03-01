@@ -52,7 +52,7 @@ public class EntrenadorActivity extends AppCompatActivity {
         inputBuscar = findViewById(R.id.inputBuscarSesion);
 
         Button btnCrear = findViewById(R.id.btnCrearSesion);
-        Button btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        Button btnCerrarSesion = findViewById(R.id.logoutBtn);
 
         adapter = new SesionesAdapter(this, sesionesFiltradas, this::eliminarSesion);
         recyclerSesiones.setLayoutManager(new LinearLayoutManager(this));

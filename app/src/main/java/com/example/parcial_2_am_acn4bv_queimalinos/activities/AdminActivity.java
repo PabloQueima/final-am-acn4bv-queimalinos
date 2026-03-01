@@ -42,7 +42,7 @@ public class AdminActivity extends AppCompatActivity {
 
         Button btnUsuarios = findViewById(R.id.btnGestionUsuarios);
         Button btnEjercicios = findViewById(R.id.btnGestionEjercicios);
-        Button btnLogout = findViewById(R.id.btnLogout);
+        Button btnLogout = findViewById(R.id.logoutBtn);
 
         btnUsuarios.setOnClickListener(v ->
                 startActivity(new Intent(this, AdminUsuariosActivity.class))
