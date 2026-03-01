@@ -1,6 +1,8 @@
 package com.example.final_am_acn4bv_queimalinos.activities;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.*;
 
 import androidx.appcompat.app.AlertDialog;
@@ -12,7 +14,6 @@ import com.example.final_am_acn4bv_queimalinos.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
@@ -24,13 +25,15 @@ public class AdminUsuariosActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
-    private EditText inputNombre, inputEmail;
+    private EditText inputNombre, inputEmail, inputBuscar;
     private Spinner spinnerRol;
     private RecyclerView recycler;
     private TextView txtPagina;
     private Button btnAnterior, btnSiguiente, btnGuardar, btnReset;
 
     private List<Map<String,Object>> listaCompleta = new ArrayList<>();
+    private List<Map<String,Object>> listaFiltrada = new ArrayList<>();
+
     private int paginaActual = 0;
     private final int TAM_PAGINA = 10;
 
@@ -46,6 +49,7 @@ public class AdminUsuariosActivity extends AppCompatActivity {
 
         inputNombre = findViewById(R.id.inputNombreUsuario);
         inputEmail = findViewById(R.id.inputEmailUsuario);
+        inputBuscar = findViewById(R.id.inputBuscarUsuario);
         spinnerRol = findViewById(R.id.spinnerRol);
 
         recycler = findViewById(R.id.recyclerUsuarios);
@@ -69,6 +73,14 @@ public class AdminUsuariosActivity extends AppCompatActivity {
         btnSiguiente.setOnClickListener(v -> cambiarPagina(1));
         btnReset.setOnClickListener(v -> resetPassword());
 
+        inputBuscar.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s,int start,int count,int after){}
+            @Override public void onTextChanged(CharSequence s,int start,int before,int count){
+                filtrar(s.toString());
+            }
+            @Override public void afterTextChanged(Editable s){}
+        });
+
         cargarDatos();
     }
 
@@ -82,28 +94,63 @@ public class AdminUsuariosActivity extends AppCompatActivity {
                 listaCompleta.add(map);
             }
 
+            listaFiltrada.clear();
+            listaFiltrada.addAll(listaCompleta);
+
+            paginaActual = 0;
             actualizarRecycler();
         });
+    }
+
+    private void filtrar(String texto) {
+
+        listaFiltrada.clear();
+
+        if (texto.isEmpty()) {
+            listaFiltrada.addAll(listaCompleta);
+        } else {
+
+            String t = texto.toLowerCase();
+
+            for (Map<String,Object> u : listaCompleta) {
+
+                String nombre = String.valueOf(u.get("nombre")).toLowerCase();
+                String email = String.valueOf(u.get("email")).toLowerCase();
+                String rol = String.valueOf(u.get("rol")).toLowerCase();
+
+                if (nombre.contains(t) ||
+                        email.contains(t) ||
+                        rol.contains(t)) {
+
+                    listaFiltrada.add(u);
+                }
+            }
+        }
+
+        paginaActual = 0;
+        actualizarRecycler();
     }
 
     private void actualizarRecycler() {
 
         int inicio = paginaActual * TAM_PAGINA;
-        int fin = Math.min(inicio + TAM_PAGINA, listaCompleta.size());
+        int fin = Math.min(inicio + TAM_PAGINA, listaFiltrada.size());
 
-        List<Map<String,Object>> sub = listaCompleta.subList(
-                Math.min(inicio, listaCompleta.size()),
+        List<Map<String,Object>> sub = listaFiltrada.subList(
+                Math.min(inicio, listaFiltrada.size()),
                 fin
         );
 
         recycler.setAdapter(new UsuarioAdapter(sub));
 
-        int totalPaginas = (int) Math.ceil((double) listaCompleta.size() / TAM_PAGINA);
+        int totalPaginas = (int) Math.ceil((double) listaFiltrada.size() / TAM_PAGINA);
         txtPagina.setText("Página " + (paginaActual + 1) + " / " + Math.max(totalPaginas,1));
     }
 
     private void cambiarPagina(int delta) {
-        int totalPaginas = (int) Math.ceil((double) listaCompleta.size() / TAM_PAGINA);
+
+        int totalPaginas = (int) Math.ceil((double) listaFiltrada.size() / TAM_PAGINA);
+
         paginaActual += delta;
 
         if (paginaActual < 0) paginaActual = 0;
@@ -169,9 +216,9 @@ public class AdminUsuariosActivity extends AppCompatActivity {
                                 .document(uid)
                                 .set(map)
                                 .addOnSuccessListener(aVoid -> {
-                                    AdminUsuariosActivity.this.limpiarForm();
-                                    AdminUsuariosActivity.this.cargarDatos();
-                                    Toast.makeText(AdminUsuariosActivity.this,
+                                    limpiarForm();
+                                    cargarDatos();
+                                    Toast.makeText(this,
                                             "Usuario creado",
                                             Toast.LENGTH_SHORT).show();
                                 });
@@ -179,7 +226,7 @@ public class AdminUsuariosActivity extends AppCompatActivity {
                         secondaryAuth.signOut();
                     })
                     .addOnFailureListener(e ->
-                            Toast.makeText(AdminUsuariosActivity.this,
+                            Toast.makeText(this,
                                     "Error: " + e.getMessage(),
                                     Toast.LENGTH_LONG).show()
                     );
@@ -229,7 +276,7 @@ public class AdminUsuariosActivity extends AppCompatActivity {
         @Override
         public UsuarioViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
             android.view.View view = getLayoutInflater()
-                    .inflate(R.layout.item_admin_simple, parent, false);
+                    .inflate(R.layout.item_admin_usuario, parent, false);
             return new UsuarioViewHolder(view);
         }
 
@@ -251,13 +298,6 @@ public class AdminUsuariosActivity extends AppCompatActivity {
                 );
                 editandoId = String.valueOf(u.get("uid"));
             });
-
-            holder.btnEliminar.setOnClickListener(v -> {
-                db.collection("usuarios")
-                        .document(String.valueOf(u.get("uid")))
-                        .delete();
-                cargarDatos();
-            });
         }
 
         @Override
@@ -268,13 +308,12 @@ public class AdminUsuariosActivity extends AppCompatActivity {
 
     private static class UsuarioViewHolder extends RecyclerView.ViewHolder {
         TextView txtNombre;
-        Button btnEditar, btnEliminar;
+        Button btnEditar;
 
         UsuarioViewHolder(android.view.View itemView) {
             super(itemView);
             txtNombre = itemView.findViewById(R.id.txtNombreItem);
             btnEditar = itemView.findViewById(R.id.btnEditarItem);
-            btnEliminar = itemView.findViewById(R.id.btnEliminarItem);
         }
     }
 }

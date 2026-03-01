@@ -181,7 +181,7 @@ public class AdminEjerciciosActivity extends AppCompatActivity {
 
         public EjercicioViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
             android.view.View view = getLayoutInflater()
-                    .inflate(R.layout.item_admin_simple, parent, false);
+                    .inflate(R.layout.item_admin_ejercicio, parent, false);
             return new EjercicioViewHolder(view);
         }
 
