@@ -31,7 +31,7 @@ public class EditarSesionActivity extends AppCompatActivity {
 
     private List<Ejercicio> ejerciciosDisponibles = new ArrayList<>();
     private List<Ejercicio> ejerciciosFiltrados = new ArrayList<>();
-    private List<Sesion.EjercicioRef> ejerciciosSesion = new ArrayList<>();
+    private List<EjercicioEnSesion> ejerciciosSesion = new ArrayList<>();
     private List<String> clientesIds = new ArrayList<>();
 
     private EjerciciosDisponiblesAdapter adapterDisponibles;
@@ -68,8 +68,7 @@ public class EditarSesionActivity extends AppCompatActivity {
         recyclerEjercicios.setAdapter(adapterDisponibles);
         recyclerSesion.setAdapter(adapterSesion);
 
-        findViewById(R.id.btnGuardarSesion)
-                .setOnClickListener(v -> guardarSesion());
+        findViewById(R.id.btnGuardarSesion).setOnClickListener(v -> guardarSesion());
 
         inputBuscar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,176 +80,143 @@ public class EditarSesionActivity extends AppCompatActivity {
         });
 
         cargarEjercicios();
-
-        if (sesionId != null && !sesionId.isEmpty()) {
-            cargarSesion(); // primero cargamos la sesión, luego clientes dentro
-        } else {
-            cargarClientes(); // en caso de crear una sesión nueva
-        }
     }
 
     private void cargarEjercicios() {
-        db.collection("ejercicios")
-                .get()
-                .addOnSuccessListener(q -> {
-                    ejerciciosDisponibles.clear();
-                    for (DocumentSnapshot doc : q.getDocuments()) {
-                        Ejercicio e = doc.toObject(Ejercicio.class);
-                        if (e != null) ejerciciosDisponibles.add(e);
-                    }
-                    filtrarEjercicios("");
-                });
+        db.collection("ejercicios").get().addOnSuccessListener(q -> {
+            ejerciciosDisponibles.clear();
+            for (DocumentSnapshot doc : q.getDocuments()) {
+                Ejercicio e = doc.toObject(Ejercicio.class);
+                if (e != null) ejerciciosDisponibles.add(e);
+            }
+            filtrarEjercicios("");
+            if (sesionId != null) cargarSesion();
+            else cargarClientes();
+        });
     }
 
     private void filtrarEjercicios(String texto) {
         ejerciciosFiltrados.clear();
-        if (texto.isEmpty()) {
-            ejerciciosFiltrados.addAll(ejerciciosDisponibles);
-        } else {
+        if (texto.isEmpty()) ejerciciosFiltrados.addAll(ejerciciosDisponibles);
+        else {
             for (Ejercicio e : ejerciciosDisponibles) {
-                if (e.getNombre() != null &&
-                        e.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                if (e.getNombre() != null && e.getNombre().toLowerCase().contains(texto.toLowerCase()))
                     ejerciciosFiltrados.add(e);
-                }
             }
         }
         adapterDisponibles.notifyDataSetChanged();
     }
 
     private void cargarClientes() {
-        db.collection("usuarios")
-                .whereEqualTo("rol", "cliente")
-                .get()
-                .addOnSuccessListener(q -> {
-                    List<String> nombres = new ArrayList<>();
-                    clientesIds.clear();
-
-                    for (DocumentSnapshot d : q) {
-                        String nombre = d.getString("nombre");
-                        if (nombre != null) {
-                            nombres.add(nombre);
-                            clientesIds.add(d.getId());
-                        }
-                    }
-
-                    spinnerClientes.setAdapter(
-                            new ArrayAdapter<>(this,
-                                    android.R.layout.simple_spinner_dropdown_item,
-                                    nombres)
-                    );
-
-                    if (clienteUidOriginal != null) {
-                        int index = clientesIds.indexOf(clienteUidOriginal);
-                        if (index >= 0) spinnerClientes.setSelection(index);
-                    }
-                });
+        db.collection("usuarios").whereEqualTo("rol","cliente").get().addOnSuccessListener(q -> {
+            List<String> nombres = new ArrayList<>();
+            clientesIds.clear();
+            for (DocumentSnapshot d : q) {
+                String nombre = d.getString("nombre");
+                if (nombre != null) {
+                    nombres.add(nombre);
+                    clientesIds.add(d.getId());
+                }
+            }
+            spinnerClientes.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, nombres));
+            if (clienteUidOriginal != null) {
+                int index = clientesIds.indexOf(clienteUidOriginal);
+                if (index >= 0) spinnerClientes.setSelection(index);
+            }
+        });
     }
 
     private void agregarEjercicio(Ejercicio ejercicio) {
         if (ejercicio == null) return;
-        for (Sesion.EjercicioRef e : ejerciciosSesion) {
-            if (Objects.equals(e.getId(), ejercicio.getId())) return;
+        for (EjercicioEnSesion e : ejerciciosSesion) {
+            if (Objects.equals(e.getEjercicio().getId(), ejercicio.getId())) return;
         }
-        Sesion.EjercicioRef nuevo = new Sesion.EjercicioRef();
-        nuevo.setId(ejercicio.getId());
-        nuevo.setSeries(3);
-        nuevo.setReps(10);
-        ejerciciosSesion.add(nuevo);
+        ejerciciosSesion.add(new EjercicioEnSesion(ejercicio, 3, 10));
         adapterSesion.notifyDataSetChanged();
     }
 
     private void cargarSesion() {
-        db.collection("sesiones")
-                .document(sesionId)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    if (!doc.exists()) return;
+        db.collection("sesiones").document(sesionId).get().addOnSuccessListener(doc -> {
+            if (!doc.exists()) return;
 
-                    inputTitulo.setText(doc.getString("titulo"));
-                    createdAtOriginal = doc.getString("createdAt");
-                    clienteUidOriginal = doc.getString("clienteUid");
+            inputTitulo.setText(doc.getString("titulo"));
+            createdAtOriginal = doc.getString("createdAt");
+            clienteUidOriginal = doc.getString("clienteUid");
 
-                    List<Map<String, Object>> lista =
-                            (List<Map<String, Object>>) doc.get("ejercicios");
+            List<Map<String,Object>> lista = (List<Map<String,Object>>) doc.get("ejercicios");
+            ejerciciosSesion.clear();
 
-                    ejerciciosSesion.clear();
+            if (lista != null) {
+                for (Map<String,Object> m : lista) {
+                    if (m == null) continue;
 
-                    if (lista != null) {
-                        for (Map<String, Object> m : lista) {
-                            if (m == null) continue;
-                            Sesion.EjercicioRef ref = new Sesion.EjercicioRef();
-                            Object id = m.get("id");
-                            Object series = m.get("series");
-                            Object reps = m.get("reps");
-                            if (id instanceof Long) ref.setId((Long) id);
-                            if (series instanceof Long) ref.setSeries(((Long) series).intValue());
-                            if (reps instanceof Long) ref.setReps(((Long) reps).intValue());
-                            ejerciciosSesion.add(ref);
-                        }
+                    Long idLong = m.get("id") instanceof Long ? (Long)m.get("id") : null;
+                    int series = m.get("series") != null ? ((Long)m.get("series")).intValue() : 3;
+                    int reps = m.get("reps") != null ? ((Long)m.get("reps")).intValue() : 10;
+
+                    Ejercicio ej = null;
+                    for (Ejercicio e : ejerciciosDisponibles) {
+                        if (idLong != null && Objects.equals(e.getId(), idLong)) { ej = e; break; }
                     }
+                    if (ej != null) ejerciciosSesion.add(new EjercicioEnSesion(ej, series, reps));
+                }
+            }
 
-                    adapterSesion.notifyDataSetChanged();
-
-                    // ahora que tenemos clienteUidOriginal, cargamos clientes
-                    cargarClientes();
-                });
+            adapterSesion.notifyDataSetChanged();
+            cargarClientes();
+        });
     }
 
     private void guardarSesion() {
         String titulo = inputTitulo.getText().toString().trim();
+        if (titulo.isEmpty()) { Toast.makeText(this, "Ingrese un título", Toast.LENGTH_SHORT).show(); return; }
+        if (ejerciciosSesion.isEmpty()) { Toast.makeText(this, "Agregue al menos un ejercicio", Toast.LENGTH_SHORT).show(); return; }
+        if (spinnerClientes.getSelectedItemPosition() < 0) { Toast.makeText(this, "Seleccione un cliente", Toast.LENGTH_SHORT).show(); return; }
+        if (auth.getCurrentUser() == null) { Toast.makeText(this, "Sesión expirada", Toast.LENGTH_SHORT).show(); return; }
 
-        if (titulo.isEmpty()) {
-            Toast.makeText(this, "Ingrese un título", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (ejerciciosSesion.isEmpty()) {
-            Toast.makeText(this, "Agregue al menos un ejercicio", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (spinnerClientes.getSelectedItemPosition() < 0) {
-            Toast.makeText(this, "Seleccione un cliente", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        for (Sesion.EjercicioRef e : ejerciciosSesion) {
-            if (e.getSeries() <= 0 || e.getReps() <= 0) {
-                Toast.makeText(this, "Series y reps deben ser mayores a 0", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        if (auth.getCurrentUser() == null) {
-            Toast.makeText(this, "Sesión expirada", Toast.LENGTH_SHORT).show();
-            return;
+        List<Map<String,Object>> ejerciciosMap = new ArrayList<>();
+        for (EjercicioEnSesion e : ejerciciosSesion) {
+            if (e.getSeries() <= 0 || e.getReps() <= 0) { Toast.makeText(this,"Series y reps deben ser mayores a 0",Toast.LENGTH_SHORT).show(); return; }
+            Map<String,Object> map = new HashMap<>();
+            map.put("id", e.getEjercicio().getId());
+            map.put("series", e.getSeries());
+            map.put("reps", e.getReps());
+            ejerciciosMap.add(map);
         }
 
         String clienteUid = clientesIds.get(spinnerClientes.getSelectedItemPosition());
 
-        Map<String, Object> sesion = new HashMap<>();
+        Map<String,Object> sesion = new HashMap<>();
         sesion.put("titulo", titulo);
         sesion.put("clienteUid", clienteUid);
         sesion.put("entrenadorUid", auth.getCurrentUser().getUid());
-        sesion.put("ejercicios", ejerciciosSesion);
+        sesion.put("ejercicios", ejerciciosMap);
         sesion.put("updatedAt", isoNow());
+        sesion.put("createdAt", sesionId == null ? isoNow() : createdAtOriginal);
 
         if (sesionId == null || sesionId.isEmpty()) {
-            sesion.put("createdAt", isoNow());
-            db.collection("sesiones")
-                    .add(sesion)
-                    .addOnSuccessListener(r -> finish())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Error al guardar", Toast.LENGTH_SHORT).show());
+            db.collection("sesiones").add(sesion).addOnSuccessListener(r -> finish())
+                    .addOnFailureListener(e -> Toast.makeText(this,"Error al guardar",Toast.LENGTH_SHORT).show());
         } else {
-            sesion.put("createdAt", createdAtOriginal);
-            db.collection("sesiones")
-                    .document(sesionId)
-                    .set(sesion)
+            db.collection("sesiones").document(sesionId).set(sesion)
                     .addOnSuccessListener(r -> finish())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(this,"Error al actualizar",Toast.LENGTH_SHORT).show());
         }
     }
 
     private String isoNow() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-                .format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(new Date());
+    }
+
+    public static class EjercicioEnSesion {
+        private Ejercicio ejercicio;
+        private int series;
+        private int reps;
+        public EjercicioEnSesion(Ejercicio e,int s,int r){ this.ejercicio=e; this.series=s; this.reps=r; }
+        public Ejercicio getEjercicio(){return ejercicio;}
+        public int getSeries(){return series;}
+        public void setSeries(int s){series=s;}
+        public int getReps(){return reps;}
+        public void setReps(int r){reps=r;}
     }
 }

@@ -7,13 +7,24 @@
     <TextView
         android:id="@+id/tvExerciseId"
         android:textStyle="bold"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Ejercicio"/>
+
+    <TextView
+        android:id="@+id/tvExerciseInfo"
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#555555"
+        android:text="Elemento - Parte del cuerpo"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp">
 
         <EditText
             android:id="@+id/etSeries"
@@ -21,7 +32,8 @@
             android:inputType="number"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/etReps"
@@ -29,12 +41,14 @@
             android:inputType="number"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:singleLine="true"/>
 
         <ImageButton
             android:id="@+id/btnRemoveExercise"
             android:src="@android:drawable/ic_menu_delete"
             android:background="@null"
+            android:contentDescription="Eliminar ejercicio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
