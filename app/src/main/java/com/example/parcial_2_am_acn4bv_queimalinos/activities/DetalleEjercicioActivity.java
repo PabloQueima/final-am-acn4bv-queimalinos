@@ -13,7 +13,6 @@ public class DetalleEjercicioActivity extends AppCompatActivity {
 
     private TextView txtNombre, txtDescripcion, txtElemento, txtParteCuerpo;
     private ImageView imgEjercicio;
-
     private FirebaseFirestore db;
 
     @Override
@@ -29,9 +28,9 @@ public class DetalleEjercicioActivity extends AppCompatActivity {
         txtParteCuerpo = findViewById(R.id.txtParteCuerpoEjercicio);
         imgEjercicio = findViewById(R.id.imgEjercicio);
 
-        int ejercicioId = getIntent().getIntExtra("ejercicioId", -1);
+        long ejercicioId = getIntent().getLongExtra("ejercicioId", -1L);
 
-        if (ejercicioId == -1) {
+        if (ejercicioId == -1L) {
             Toast.makeText(this, "Ejercicio inválido", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -40,14 +39,12 @@ public class DetalleEjercicioActivity extends AppCompatActivity {
         cargarEjercicio(ejercicioId);
     }
 
-    private void cargarEjercicio(int ejercicioId) {
-
+    private void cargarEjercicio(long ejercicioId) {
         db.collection("ejercicios")
                 .whereEqualTo("id", ejercicioId)
                 .limit(1)
                 .get()
                 .addOnSuccessListener(query -> {
-
                     if (query.isEmpty()) {
                         Toast.makeText(this, "Ejercicio no encontrado", Toast.LENGTH_SHORT).show();
                         finish();
