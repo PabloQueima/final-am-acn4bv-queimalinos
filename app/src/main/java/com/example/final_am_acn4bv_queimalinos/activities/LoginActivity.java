@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.final_am_acn4bv_queimalinos.R;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.final_am_acn4bv_queimalinos.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         String pass = passInput.getText().toString().trim();
 
         if (email.isEmpty() || pass.isEmpty()) {
-            Toast.makeText(this, "Completar email y contraseña", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_login_campos), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -65,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (!doc.exists()) {
                         auth.signOut();
-                        Toast.makeText(this, "Usuario sin rol asignado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.error_sin_rol), Toast.LENGTH_SHORT).show();
                         return;
                     }
 

@@ -8,8 +8,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.final_am_acn4bv_queimalinos.R;
 
+import com.example.final_am_acn4bv_queimalinos.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText nombreInput, emailInput, passInput;
+    private EditText nombreInput, emailInput, passInput, confirmPassInput;
     private Button registerBtn;
 
     private FirebaseAuth auth;
@@ -36,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         nombreInput = findViewById(R.id.nombreInput);
         emailInput = findViewById(R.id.emailInput);
         passInput = findViewById(R.id.passInput);
+        confirmPassInput = findViewById(R.id.confirmPassInput);
         registerBtn = findViewById(R.id.registerBtn);
 
         registerBtn.setOnClickListener(v -> registrarUsuario());
@@ -46,17 +47,24 @@ public class RegisterActivity extends AppCompatActivity {
         String nombre = nombreInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = passInput.getText().toString().trim();
+        String confirmPassword = confirmPassInput.getText().toString().trim();
 
         if (TextUtils.isEmpty(nombre) ||
                 TextUtils.isEmpty(email) ||
-                TextUtils.isEmpty(password)) {
+                TextUtils.isEmpty(password) ||
+                TextUtils.isEmpty(confirmPassword)) {
 
-            Toast.makeText(this, "Completar todos los campos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_campos_obligatorios), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (password.length() < 6) {
-            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_password_length), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, getString(R.string.error_password_no_match), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -65,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     FirebaseUser user = auth.getCurrentUser();
                     if (user == null) {
-                        Toast.makeText(this, "Error inesperado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.error_inesperado), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -81,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                             .set(usuario)
                             .addOnSuccessListener(aVoid -> {
 
-                                Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, getString(R.string.registro_exitoso), Toast.LENGTH_SHORT).show();
 
                                 Intent intent = new Intent(this, ClienteActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -89,12 +97,12 @@ public class RegisterActivity extends AppCompatActivity {
                                 finish();
                             })
                             .addOnFailureListener(e ->
-                                    Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this, getString(R.string.error_guardar_datos), Toast.LENGTH_SHORT).show()
                             );
 
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
     }
 }

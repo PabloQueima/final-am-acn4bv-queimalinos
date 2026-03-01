@@ -1,21 +1,26 @@
 <resources>
-    <!-- App -->
     <string name="app_name">Plataforma de Entrenamiento</string>
-
-    <!-- Textos generales -->
     <string name="texto_bienvenida">Plataforma de Entrenamiento</string>
     <string name="texto_plataforma">Plataforma de Entrenamiento</string>
     <string name="btn_login">Ingresar</string>
     <string name="btn_register">Registrarme</string>
     <string name="btn_create_account">Crear cuenta</string>
     <string name="btn_logout">Cerrar sesión</string>
-
-    <!-- Inputs -->
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_password_reg">Contraseña</string>
     <string name="boton_ver_ejercicios">Ver ejercicios</string>
-    <string name="boton_ocultar_ejercicios">Ocultar ejercicios</string>
+    <string name="hint_nombre">Nombre</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="error_campos_obligatorios">Completar todos los campos</string>
+    <string name="error_password_length">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_password_no_match">Las contraseñas no coinciden</string>
+    <string name="error_inesperado">Error inesperado</string>
+    <string name="registro_exitoso">Registro exitoso</string>
+    <string name="error_guardar_datos">Error al guardar datos</string>
+    <string name="error_login_campos">Completar email y contraseña</string>
+    <string name="error_sin_rol">Usuario sin rol asignado</string>
+    <string name="desc_logo">Logo de la aplicación</string>
 
 </resources>
 
