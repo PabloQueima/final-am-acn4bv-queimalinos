@@ -1,4 +1,4 @@
-package com.example.parcial_2_am_acn4bv_queimalinos.adapters;
+package com.example.final_am_acn4bv_queimalinos.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.parcial_2_am_acn4bv_queimalinos.R;
-import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
+import com.example.final_am_acn4bv_queimalinos.R;
+import com.example.final_am_acn4bv_queimalinos.models.Ejercicio;
 
 import java.util.List;
 

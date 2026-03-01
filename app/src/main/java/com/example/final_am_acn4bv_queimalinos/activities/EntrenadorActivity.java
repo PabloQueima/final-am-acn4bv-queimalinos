@@ -1,4 +1,4 @@
-package com.example.parcial_2_am_acn4bv_queimalinos.activities;
+package com.example.final_am_acn4bv_queimalinos.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.parcial_2_am_acn4bv_queimalinos.R;
-import com.example.parcial_2_am_acn4bv_queimalinos.adapters.SesionesAdapter;
-import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
-import com.example.parcial_2_am_acn4bv_queimalinos.models.Usuario;
+import com.example.final_am_acn4bv_queimalinos.R;
+import com.example.final_am_acn4bv_queimalinos.adapters.SesionesAdapter;
+import com.example.final_am_acn4bv_queimalinos.models.Sesion;
+import com.example.final_am_acn4bv_queimalinos.models.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 

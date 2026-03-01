@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.final_am_acn4bv_queimalinos">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
-        android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
@@ -15,50 +16,50 @@
             android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".activities.RegisterActivity"
-            android:exported="false"/>
-
-        <activity
-            android:name=".activities.ClienteActivity"
-            android:exported="false"/>
-
-        <activity
-            android:name=".activities.EntrenadorActivity"
-            android:exported="false"/>
-
-        <activity
-            android:name=".activities.EditarSesionActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".activities.AdminActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
-            android:name=".activities.AdminEjerciciosActivity"
-            android:exported="false"/>
+            android:name=".activities.EntrenadorActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.ClienteActivity"
+            android:exported="false" />
 
         <activity
             android:name=".activities.AdminUsuariosActivity"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.AdminEjerciciosActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.EditarSesionActivity"
+            android:exported="false" />
 
         <activity
             android:name=".activities.RealizarSesionActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".activities.DetalleEjercicioActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
     </application>
 </manifest>

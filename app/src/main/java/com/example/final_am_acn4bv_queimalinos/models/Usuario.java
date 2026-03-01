@@ -1,4 +1,4 @@
-package com.example.parcial_2_am_acn4bv_queimalinos.models;
+package com.example.final_am_acn4bv_queimalinos.models;
 
 public class Usuario {
 

@@ -1,12 +1,12 @@
-package com.example.parcial_2_am_acn4bv_queimalinos.activities;
+package com.example.final_am_acn4bv_queimalinos.activities;
 
 import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.*;
-import com.example.parcial_2_am_acn4bv_queimalinos.models.Ejercicio;
-import com.example.parcial_2_am_acn4bv_queimalinos.R;
+import com.example.final_am_acn4bv_queimalinos.models.Ejercicio;
+import com.example.final_am_acn4bv_queimalinos.R;
 import com.bumptech.glide.Glide;
 
 public class DetalleEjercicioActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.parcial_2_am_acn4bv_queimalinos.adapters;
+package com.example.final_am_acn4bv_queimalinos.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.parcial_2_am_acn4bv_queimalinos.R;
-import com.example.parcial_2_am_acn4bv_queimalinos.activities.EditarSesionActivity;
-import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
-import com.example.parcial_2_am_acn4bv_queimalinos.models.Usuario;
+import com.example.final_am_acn4bv_queimalinos.R;
+import com.example.final_am_acn4bv_queimalinos.activities.EditarSesionActivity;
+import com.example.final_am_acn4bv_queimalinos.models.Sesion;
+import com.example.final_am_acn4bv_queimalinos.models.Usuario;
 
 import java.util.HashMap;
 import java.util.List;

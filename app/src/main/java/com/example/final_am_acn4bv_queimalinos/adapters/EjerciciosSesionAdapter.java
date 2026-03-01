@@ -1,4 +1,4 @@
-package com.example.parcial_2_am_acn4bv_queimalinos.adapters;
+package com.example.final_am_acn4bv_queimalinos.adapters;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.parcial_2_am_acn4bv_queimalinos.R;
-import com.example.parcial_2_am_acn4bv_queimalinos.activities.EditarSesionActivity;
+import com.example.final_am_acn4bv_queimalinos.R;
+import com.example.final_am_acn4bv_queimalinos.activities.EditarSesionActivity;
 
 import java.util.List;
 

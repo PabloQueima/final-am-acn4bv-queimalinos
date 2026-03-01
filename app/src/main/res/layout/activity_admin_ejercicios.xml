@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CRUD Ejercicios"
+            android:text="Administración de Ejercicios"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="20dp" />
 
         <EditText
             android:id="@+id/inputNombreEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre"
+            android:hint="Nombre del ejercicio"
             android:layout_marginBottom="12dp"/>
 
         <EditText
@@ -29,6 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Descripción"
+            android:minLines="3"
+            android:gravity="top"
             android:layout_marginBottom="12dp"/>
 
         <EditText
@@ -49,28 +52,57 @@
             android:id="@+id/inputImagenEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="URL Imagen"
-            android:layout_marginBottom="12dp"/>
+            android:hint="URL imagen"
+            android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/btnGuardarEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar Ejercicio"
+            android:text="Guardar ejercicio"
             android:layout_marginBottom="24dp"/>
+
+        <EditText
+            android:id="@+id/inputBuscarEjercicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Buscar por nombre, parte del cuerpo o elemento"
+            android:layout_marginBottom="20dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerEjercicios"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/txtPagina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Página 1 / 1"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"/>
 
         <LinearLayout
-            android:id="@+id/contenedorEjercicios"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"/>
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
 
-        <Button
-            android:id="@+id/btnVolver"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Volver al dashboard"/>
+            <Button
+                android:id="@+id/btnAnterior"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Anterior"/>
+
+            <Button
+                android:id="@+id/btnSiguiente"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Siguiente"/>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

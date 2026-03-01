@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.parcial_2_am_acn4bv_queimalinos'
+    namespace 'com.example.final_am_acn4bv_queimalinos'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.parcial_2_am_acn4bv_queimalinos"
+        applicationId "com.example.final_am_acn4bv_queimalinos"
         minSdk 29
         targetSdk 34
         versionCode 1
