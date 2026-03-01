@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.parcial_2_am_acn4bv_queimalinos.R;
 import com.example.parcial_2_am_acn4bv_queimalinos.adapters.SesionesAdapter;
 import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class EntrenadorActivity extends AppCompatActivity {
 
@@ -32,6 +32,7 @@ public class EntrenadorActivity extends AppCompatActivity {
 
     private List<Sesion> sesiones = new ArrayList<>();
     private List<Sesion> sesionesFiltradas = new ArrayList<>();
+    private Map<String, Usuario> usuariosMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class EntrenadorActivity extends AppCompatActivity {
                 .addOnSuccessListener(q -> {
 
                     sesiones.clear();
+                    usuariosMap.clear();
 
                     for (DocumentSnapshot doc : q.getDocuments()) {
                         Sesion sesion = doc.toObject(Sesion.class);
@@ -99,12 +101,57 @@ public class EntrenadorActivity extends AppCompatActivity {
                         }
                     }
 
-                    filtrarSesiones(inputBuscar.getText().toString().trim());
+                    cargarUsuariosDeSesiones();
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FIRESTORE_ERROR", e.getMessage());
                     Toast.makeText(this, "Error al cargar sesiones", Toast.LENGTH_LONG).show();
                 });
+    }
+
+    private void cargarUsuariosDeSesiones() {
+
+        Set<String> clienteUids = new HashSet<>();
+
+        for (Sesion s : sesiones) {
+            if (s.getClienteUid() != null) {
+                clienteUids.add(s.getClienteUid());
+            }
+        }
+
+        if (clienteUids.isEmpty()) {
+            filtrarSesiones(inputBuscar.getText().toString().trim());
+            return;
+        }
+
+        final int total = clienteUids.size();
+        final int[] cargados = {0};
+
+        for (String uid : clienteUids) {
+            db.collection("usuarios")
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        Usuario usuario = doc.toObject(Usuario.class);
+                        if (usuario != null) {
+                            usuariosMap.put(uid, usuario);
+                        }
+
+                        cargados[0]++;
+
+                        if (cargados[0] == total) {
+                            adapter.setUsuariosMap(usuariosMap);
+                            filtrarSesiones(inputBuscar.getText().toString().trim());
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        cargados[0]++;
+                        if (cargados[0] == total) {
+                            adapter.setUsuariosMap(usuariosMap);
+                            filtrarSesiones(inputBuscar.getText().toString().trim());
+                        }
+                    });
+        }
     }
 
     private void filtrarSesiones(String texto) {

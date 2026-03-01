@@ -14,8 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.parcial_2_am_acn4bv_queimalinos.R;
 import com.example.parcial_2_am_acn4bv_queimalinos.activities.EditarSesionActivity;
 import com.example.parcial_2_am_acn4bv_queimalinos.models.Sesion;
+import com.example.parcial_2_am_acn4bv_queimalinos.models.Usuario;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHolder> {
 
@@ -26,6 +30,7 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
     private Context context;
     private List<Sesion> sesiones;
     private OnSesionActionListener listener;
+    private Map<String, Usuario> usuariosMap = new HashMap<>();
 
     public SesionesAdapter(Context context,
                            List<Sesion> sesiones,
@@ -33,6 +38,10 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
         this.context = context;
         this.sesiones = sesiones;
         this.listener = listener;
+    }
+
+    public void setUsuariosMap(Map<String, Usuario> map) {
+        this.usuariosMap = map;
     }
 
     @NonNull
@@ -49,10 +58,19 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
         Sesion sesion = sesiones.get(position);
 
         holder.txtTitulo.setText(sesion.getTitulo() != null ? sesion.getTitulo() : "");
-        holder.txtCliente.setText("Cliente: " +
-                (sesion.getClienteUid() != null ? sesion.getClienteUid() : ""));
+
+        Usuario usuario = usuariosMap.get(sesion.getClienteUid());
+
+        if (usuario != null) {
+            holder.txtCliente.setText("Cliente: " +
+                    usuario.getNombre() + " - " + usuario.getEmail());
+        } else {
+            holder.txtCliente.setText("Cliente: Cargando...");
+        }
+
         holder.txtEjercicios.setText("Ejercicios: " +
                 (sesion.getEjercicios() != null ? sesion.getEjercicios().size() : 0));
+
         holder.txtFecha.setText("Creado: " +
                 (sesion.getCreatedAt() != null ? sesion.getCreatedAt() : ""));
 
@@ -91,4 +109,5 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
     }
+
 }
