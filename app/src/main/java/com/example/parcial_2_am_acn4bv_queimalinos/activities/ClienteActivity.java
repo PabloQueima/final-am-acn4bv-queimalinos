@@ -151,52 +151,61 @@ public class ClienteActivity extends AppCompatActivity {
 
         db.collection("sesionesCompletadas")
                 .whereEqualTo("clienteUid", clienteUid)
-                .orderBy("fechaFin", com.google.firebase.firestore.Query.Direction.DESCENDING)
-                .limit(5)
                 .get()
                 .addOnSuccessListener(query -> {
+                    query.getDocuments().stream()
+                            .sorted((a, b) -> {
+                                String fa = a.getString("fechaFin");
+                                String fb = b.getString("fechaFin");
+                                if(fa == null) return 1;
+                                if(fb == null) return -1;
+                                return fb.compareTo(fa); // descendente
+                            })
+                            .limit(5)
+                            .forEach(doc -> {
+                                LinearLayout item = new LinearLayout(this);
+                                item.setOrientation(LinearLayout.VERTICAL);
+                                item.setPadding(16,16,16,16);
+
+                                String titulo = doc.getString("tituloSesion");
+                                String fechaFinStr = doc.getString("fechaFin");
+                                Long duracionSegundos = doc.getLong("duracionSegundos");
+
+                                TextView txtTitulo = new TextView(this);
+                                txtTitulo.setText(titulo);
+                                txtTitulo.setTextSize(16);
+                                item.addView(txtTitulo);
+
+                                if(fechaFinStr != null){
+                                    TextView txtFecha = new TextView(this);
+                                    txtFecha.setText("Completada: " + fechaFinStr);
+                                    item.addView(txtFecha);
+                                }
+
+                                if(duracionSegundos != null){
+                                    long min = duracionSegundos / 60;
+                                    long seg = duracionSegundos % 60;
+                                    TextView txtDuracion = new TextView(this);
+                                    txtDuracion.setText("Duración: " + min + "m " + seg + "s");
+                                    item.addView(txtDuracion);
+                                }
+
+                                contenedorSesionesCompletadas.addView(item);
+
+                                View separador = new View(this);
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        1
+                                );
+                                params.setMargins(0, 4, 0, 4);
+                                separador.setLayoutParams(params);
+                                separador.setBackgroundColor(getResources().getColor(R.color.color_dark2));
+                                contenedorSesionesCompletadas.addView(separador);
+                            });
+
                     txtSesionesCompletadas.setText("Sesiones completadas: " + query.size());
-                    for(QueryDocumentSnapshot doc : query){
-                        LinearLayout item = new LinearLayout(this);
-                        item.setOrientation(LinearLayout.VERTICAL);
-                        item.setPadding(16,16,16,16);
-
-                        String titulo = doc.getString("tituloSesion");
-                        String fechaFinStr = doc.getString("fechaFin");
-                        Long duracionSegundos = doc.getLong("duracionSegundos");
-
-                        TextView txtTitulo = new TextView(this);
-                        txtTitulo.setText(titulo);
-                        txtTitulo.setTextSize(16);
-                        item.addView(txtTitulo);
-
-                        if(fechaFinStr != null){
-                            TextView txtFecha = new TextView(this);
-                            txtFecha.setText("Completada: " + fechaFinStr);
-                            item.addView(txtFecha);
-                        }
-
-                        if(duracionSegundos != null){
-                            long min = duracionSegundos / 60;
-                            long seg = duracionSegundos % 60;
-                            TextView txtDuracion = new TextView(this);
-                            txtDuracion.setText("Duración: " + min + "m " + seg + "s");
-                            item.addView(txtDuracion);
-                        }
-
-                        contenedorSesionesCompletadas.addView(item);
-
-                        View separador = new View(this);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                1
-                        );
-                        params.setMargins(0, 4, 0, 4);
-                        separador.setLayoutParams(params);
-                        separador.setBackgroundColor(getResources().getColor(R.color.color_dark2));
-                        contenedorSesionesCompletadas.addView(separador);
-                    }
                 });
     }
+
 
 }
