@@ -1,50 +1,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="12dp"
+    android:padding="@dimen/padding_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/color_background"
+    android:layout_marginBottom="@dimen/margen_tarjeta">
 
     <TextView
         android:id="@+id/txtTitulo"
-        android:textSize="18sp"
+        android:textSize="@dimen/texto_subtitulo"
         android:textStyle="bold"
+        android:textColor="@color/color_text_on_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/txtCliente"
+        android:textColor="@color/color_text_on_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/txtEjercicios"
+        android:textColor="@color/color_text_on_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/txtFecha"
+        android:textColor="@color/color_text_on_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margen_pequeno"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btnEditar"
-            android:text="Editar"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:id="@+id/btnEditarItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_editar"
+            android:textColor="@color/color_text_on_primary"
+            android:backgroundTint="@color/color_secondary"
+            android:layout_marginEnd="@dimen/margen_pequeno"/>
 
         <Button
-            android:id="@+id/btnEliminar"
-            android:text="Eliminar"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:id="@+id/btnEliminarItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_eliminar"
+            android:textColor="@color/color_text_on_primary"
+            android:backgroundTint="@color/color_accent"
+            android:layout_marginEnd="@dimen/margen_pequeno"/>
 
+    </LinearLayout>
 </LinearLayout>

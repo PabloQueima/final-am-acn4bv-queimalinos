@@ -2,106 +2,111 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_background"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="@dimen/padding_general">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Administración de Ejercicios"
-            android:textSize="22sp"
+            android:text="@string/titulo_admin_ejercicios"
+            android:textSize="@dimen/texto_titulo"
             android:textStyle="bold"
-            android:layout_marginBottom="20dp" />
+            android:textColor="@color/color_text_on_secondary"
+            android:layout_marginBottom="@dimen/margen_sesion"/>
 
         <EditText
             android:id="@+id/inputNombreEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre del ejercicio"
-            android:layout_marginBottom="12dp"/>
+            android:hint="@string/hint_nombre_ejercicio"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <EditText
             android:id="@+id/inputDescripcionEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Descripción"
+            android:hint="@string/hint_descripcion"
             android:minLines="3"
             android:gravity="top"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <EditText
             android:id="@+id/inputElementoEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Elemento"
-            android:layout_marginBottom="12dp"/>
+            android:hint="@string/hint_elemento"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <EditText
             android:id="@+id/inputParteCuerpoEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Parte del cuerpo"
-            android:layout_marginBottom="12dp"/>
+            android:hint="@string/hint_parte_cuerpo"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <EditText
             android:id="@+id/inputImagenEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="URL imagen"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="@dimen/margen_seccion"
+            android:hint="@string/hint_url_imagen" />
 
         <Button
             android:id="@+id/btnGuardarEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar ejercicio"
-            android:layout_marginBottom="24dp"/>
+            android:text="@string/btn_guardar_ejercicio"
+            android:textColor="@color/color_text_on_primary"
+            android:backgroundTint="@color/color_primary"
+            android:layout_marginBottom="@dimen/margen_seccion"/>
 
         <EditText
             android:id="@+id/inputBuscarEjercicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Buscar por nombre, parte del cuerpo o elemento"
-            android:layout_marginBottom="20dp"/>
+            android:hint="@string/hint_buscar_ejercicio"
+            android:layout_marginBottom="@dimen/margen_seccion"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerEjercicios"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="@dimen/alto_recycler"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <TextView
             android:id="@+id/txtPagina"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Página 1 / 1"
+            android:text="@string/pagina_default"
+            android:textColor="@color/color_text_on_secondary"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="@dimen/margen_seccion">
 
             <Button
                 android:id="@+id/btnAnterior"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Anterior"/>
+                android:text="@string/btn_anterior"/>
 
             <Button
                 android:id="@+id/btnSiguiente"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Siguiente"/>
+                android:text="@string/btn_siguiente"/>
         </LinearLayout>
 
     </LinearLayout>

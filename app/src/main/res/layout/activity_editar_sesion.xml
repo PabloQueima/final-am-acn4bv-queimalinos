@@ -3,69 +3,74 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_background"
     android:fillViewport="true">
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="@dimen/padding_general"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/inputTitulo"
-            android:hint="Título sesión"
+            android:hint="@string/hint_nombre_sesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <Spinner
             android:id="@+id/spinnerClientes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <EditText
             android:id="@+id/inputBuscarEjercicio"
-            android:hint="Buscar ejercicio"
+            android:hint="@string/hint_buscar_ejercicio_simple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <TextView
-            android:text="Ejercicios disponibles"
+            android:text="@string/txt_ejercicios_disponibles"
             android:textStyle="bold"
+            android:textColor="@color/color_text_on_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginBottom="@dimen/margen_pequeno"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerEjercicios"
             android:layout_width="match_parent"
-            android:layout_height="173dp"
-            android:overScrollMode="never" />
+            android:layout_height="@dimen/alto_recycler_mediano"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <TextView
-            android:text="Ejercicios en sesión"
+            android:text="@string/txt_ejercicios_sesion"
             android:textStyle="bold"
+            android:textColor="@color/color_text_on_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginBottom="@dimen/margen_pequeno"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerSesion"
             android:layout_width="match_parent"
-            android:layout_height="277dp"
-            android:overScrollMode="never" />
+            android:layout_height="@dimen/alto_recycler_mediano"
+            android:layout_marginBottom="@dimen/margen_seccion"/>
 
         <Button
             android:id="@+id/btnGuardarSesion"
-            android:text="Guardar sesión"
+            android:text="@string/btn_guardar_sesion"
+            android:textColor="@color/color_text_on_primary"
+            android:backgroundTint="@color/color_primary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </ScrollView>

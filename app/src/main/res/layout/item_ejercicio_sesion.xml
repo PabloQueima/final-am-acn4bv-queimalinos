@@ -1,56 +1,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:padding="@dimen/padding_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/color_background"
+    android:layout_marginBottom="@dimen/margen_pequeno">
 
     <TextView
         android:id="@+id/tvExerciseId"
         android:textStyle="bold"
-        android:textSize="16sp"
+        android:textSize="@dimen/texto_general"
+        android:textColor="@color/color_text_on_secondary"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ejercicio"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/tvExerciseInfo"
-        android:textSize="14sp"
+        android:textSize="@dimen/texto_general"
+        android:textColor="@color/color_text_on_secondary"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#555555"
-        android:text="Elemento - Parte del cuerpo"/>
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="@dimen/margen_pequeno">
 
         <EditText
             android:id="@+id/etSeries"
-            android:hint="Series"
+            android:hint="@string/hint_series"
             android:inputType="number"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:layout_marginEnd="@dimen/margen_pequeno"/>
 
         <EditText
             android:id="@+id/etReps"
-            android:hint="Reps"
+            android:hint="@string/hint_reps"
             android:inputType="number"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:layout_marginEnd="@dimen/margen_pequeno"/>
 
         <ImageButton
             android:id="@+id/btnRemoveExercise"
             android:src="@android:drawable/ic_menu_delete"
             android:background="@null"
-            android:contentDescription="Eliminar ejercicio"
+            android:contentDescription="@string/desc_eliminar_ejercicio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-
 </LinearLayout>

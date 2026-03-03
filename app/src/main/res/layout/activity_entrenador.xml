@@ -3,46 +3,46 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_background"
     android:fillViewport="true">
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="@dimen/padding_general"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/inputBuscarSesion"
-            android:hint="Buscar por título"
+            android:hint="@string/hint_buscar_sesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <Button
             android:id="@+id/btnCrearSesion"
-            android:text="Crear nueva sesión"
+            android:text="@string/btn_crear_sesion"
+            android:textColor="@color/color_text_on_primary"
+            android:backgroundTint="@color/color_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerSesiones"
             android:layout_width="match_parent"
-            android:layout_height="529dp"
-            android:layout_marginTop="8dp"
-            android:overScrollMode="never" />
+            android:layout_height="@dimen/alto_recycler_grande"
+            android:layout_marginBottom="@dimen/margen_seccion"/>
 
         <Button
             android:id="@+id/logoutBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/color_accent"
-            android:padding="12dp"
-            android:text="Deslogearse"
-            android:textColor="@color/color_light" />
+            android:text="@string/btn_logout"
+            android:textColor="@color/color_text_on_primary"
+            android:backgroundTint="@color/color_accent"/>
     </LinearLayout>
 </ScrollView>

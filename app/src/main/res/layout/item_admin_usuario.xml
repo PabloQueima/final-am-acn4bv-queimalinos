@@ -3,22 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="12dp"
-    android:layout_marginBottom="8dp">
+    android:padding="@dimen/padding_item"
+    android:layout_marginBottom="@dimen/margen_pequeno"
+    android:background="@color/color_background">
 
     <TextView
         android:id="@+id/txtNombreItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="@dimen/texto_general"
+        android:textStyle="bold"
+        android:textColor="@color/color_text_on_secondary" />
 
     <Button
         android:id="@+id/btnEditarItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Editar"
-        android:layout_marginEnd="8dp"/>
+        android:text="@string/btn_editar"
+        android:textColor="@color/color_text_on_primary"
+        android:backgroundTint="@color/color_secondary"
+        android:layout_marginEnd="@dimen/margen_pequeno"/>
 
 </LinearLayout>

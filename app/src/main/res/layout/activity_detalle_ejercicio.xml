@@ -17,45 +17,38 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/texto_titulo"
             android:textStyle="bold"
-            android:textColor="@color/color_dark"
-            android:layout_marginBottom="8dp"
-            android:text="Ejercicio"/>
+            android:textColor="@color/color_text_on_secondary"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <ImageView
             android:id="@+id/imgEjercicio"
             android:layout_width="match_parent"
-            android:layout_height="360dp"
+            android:layout_height="@dimen/alto_imagen_detalle"
             android:scaleType="centerCrop"
-            android:background="@color/color_light"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <TextView
             android:id="@+id/txtDescripcionEjercicio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descripción"
             android:textSize="@dimen/texto_general"
-            android:textColor="@color/color_dark2"
-            android:layout_marginBottom="8dp"/>
+            android:textColor="@color/color_text_on_secondary"
+            android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
         <TextView
             android:id="@+id/txtElementoEjercicio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Elemento"
             android:textSize="@dimen/texto_general"
-            android:textColor="@color/color_dark2"
-            android:layout_marginBottom="4dp"/>
+            android:textColor="@color/color_text_on_secondary"
+            android:layout_marginBottom="@dimen/margen_pequeno"/>
 
         <TextView
             android:id="@+id/txtParteCuerpoEjercicio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Parte del cuerpo"
             android:textSize="@dimen/texto_general"
-            android:textColor="@color/color_dark2"
-            android:layout_marginBottom="4dp"/>
+            android:textColor="@color/color_text_on_secondary"/>
 
     </LinearLayout>
-
 </ScrollView>

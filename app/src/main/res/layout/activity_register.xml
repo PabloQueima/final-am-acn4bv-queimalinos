@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/padding_general"
-    android:background="@color/color_dark">
+    android:background="@color/color_background">
 
     <ImageView
         android:id="@+id/logoView"
@@ -20,8 +20,8 @@
         android:id="@+id/txtTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/texto_plataforma"
-        android:textColor="@color/color_light"
+        android:text="@string/app_name"
+        android:textColor="@color/color_text_on_secondary"
         android:textSize="@dimen/texto_titulo"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/margen_tarjeta"/>
@@ -31,8 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_nombre"
-        android:textColor="@color/color_light"
-        android:textColorHint="@color/color_light_dim"
+        android:textColor="@color/color_text_on_primary"
+        android:textColorHint="@color/color_primary"
         android:background="@drawable/input_background"
         android:padding="@dimen/padding_general"
         android:layout_marginTop="@dimen/margen_sesion"/>
@@ -42,8 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_email"
-        android:textColor="@color/color_light"
-        android:textColorHint="@color/color_light_dim"
+        android:textColor="@color/color_text_on_primary"
+        android:textColorHint="@color/color_primary"
         android:background="@drawable/input_background"
         android:padding="@dimen/padding_general"
         android:layout_marginTop="@dimen/margen_tarjeta"
@@ -53,9 +53,9 @@
         android:id="@+id/passInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_password_reg"
-        android:textColor="@color/color_light"
-        android:textColorHint="@color/color_light_dim"
+        android:hint="@string/hint_password"
+        android:textColor="@color/color_text_on_primary"
+        android:textColorHint="@color/color_primary"
         android:background="@drawable/input_background"
         android:padding="@dimen/padding_general"
         android:layout_marginTop="@dimen/margen_tarjeta"
@@ -66,8 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_confirm_password"
-        android:textColor="@color/color_light"
-        android:textColorHint="@color/color_light_dim"
+        android:textColor="@color/color_text_on_primary"
+        android:textColorHint="@color/color_primary"
         android:background="@drawable/input_background"
         android:padding="@dimen/padding_general"
         android:layout_marginTop="@dimen/margen_tarjeta"
@@ -78,7 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_create_account"
-        android:textColor="@color/color_light"
+        android:textColor="@color/color_text_on_primary"
         android:backgroundTint="@color/color_primary"
         android:layout_marginTop="@dimen/margen_sesion"/>
 

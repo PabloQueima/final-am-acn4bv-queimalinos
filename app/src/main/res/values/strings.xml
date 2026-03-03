@@ -1,26 +1,90 @@
 <resources>
+
+    <!-- App -->
     <string name="app_name">Plataforma de Entrenamiento</string>
-    <string name="texto_bienvenida">Plataforma de Entrenamiento</string>
-    <string name="texto_plataforma">Plataforma de Entrenamiento</string>
+
+    <!-- Auth -->
     <string name="btn_login">Ingresar</string>
     <string name="btn_register">Registrarme</string>
     <string name="btn_create_account">Crear cuenta</string>
     <string name="btn_logout">Cerrar sesión</string>
-    <string name="hint_email">Email</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_password_reg">Contraseña</string>
-    <string name="boton_ver_ejercicios">Ver ejercicios</string>
-    <string name="hint_nombre">Nombre</string>
+
+    <string name="hint_email">Correo electrónico</string>
+    <string name="hint_password">Contraseña</string>
     <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="hint_nombre">Nombre</string>
+
     <string name="error_campos_obligatorios">Completar todos los campos</string>
     <string name="error_password_length">La contraseña debe tener al menos 6 caracteres</string>
     <string name="error_password_no_match">Las contraseñas no coinciden</string>
     <string name="error_inesperado">Error inesperado</string>
-    <string name="registro_exitoso">Registro exitoso</string>
     <string name="error_guardar_datos">Error al guardar datos</string>
     <string name="error_login_campos">Completar email y contraseña</string>
     <string name="error_sin_rol">Usuario sin rol asignado</string>
+
+    <string name="registro_exitoso">Registro exitoso</string>
+
+    <!-- Logo -->
     <string name="desc_logo">Logo de la aplicación</string>
 
-</resources>
+    <!-- Dashboard Admin -->
+    <string name="titulo_dashboard_admin">Panel de Administración</string>
+    <string name="btn_gestion_usuarios">Gestionar Usuarios</string>
+    <string name="btn_gestion_ejercicios">Gestionar Ejercicios</string>
 
+    <!-- Admin Ejercicios -->
+    <string name="titulo_admin_ejercicios">Administración de Ejercicios</string>
+    <string name="hint_nombre_ejercicio">Nombre del ejercicio</string>
+    <string name="hint_descripcion">Descripción</string>
+    <string name="hint_elemento">Elemento</string>
+    <string name="hint_parte_cuerpo">Parte del cuerpo</string>
+    <string name="hint_url_imagen">URL imagen</string>
+    <string name="btn_guardar_ejercicio">Guardar ejercicio</string>
+    <string name="hint_buscar_ejercicio">Buscar por nombre, parte del cuerpo o elemento</string>
+
+    <!-- Admin Usuarios -->
+    <string name="titulo_admin_usuarios">Administración de Usuarios</string>
+    <string name="hint_nombre_completo">Nombre completo</string>
+    <string name="btn_guardar_usuario">Guardar usuario</string>
+    <string name="btn_reset_password">Restablecer contraseña</string>
+    <string name="hint_buscar_usuario">Buscar por nombre, email o rol</string>
+
+    <!-- Paginación -->
+    <string name="btn_anterior">Anterior</string>
+    <string name="btn_siguiente">Siguiente</string>
+    <string name="pagina_default">Página %1$d / %2$d</string>
+
+    <!-- Cliente -->
+    <string name="txt_hola">Hola</string>
+    <string name="txt_sesiones_completadas">Sesiones completadas: %1$d</string>
+    <string name="txt_sesiones_disponibles">Sesiones disponibles</string>
+    <string name="txt_ultimas_sesiones">Últimas sesiones completadas</string>
+    <string name="boton_ver_ejercicios">Ver ejercicios</string>
+
+    <!-- Sesiones -->
+    <string name="hint_nombre_sesion">Nombre sesión</string>
+    <string name="hint_cliente_uid">Cliente UID</string>
+    <string name="hint_buscar_sesion">Buscar por título</string>
+    <string name="btn_crear_sesion">Crear nueva sesión</string>
+    <string name="btn_guardar_sesion">Guardar sesión</string>
+
+    <string name="txt_timer_default">00:00:00</string>
+    <string name="txt_ejercicios">Ejercicios</string>
+    <string name="txt_ejercicios_disponibles">Ejercicios disponibles</string>
+    <string name="txt_ejercicios_sesion">Ejercicios en sesión</string>
+
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_finalizar">Finalizar</string>
+
+    <!-- Ejercicios en sesión -->
+    <string name="hint_buscar_ejercicio_simple">Buscar ejercicio</string>
+    <string name="hint_series">Series</string>
+    <string name="hint_reps">Reps</string>
+    <string name="desc_eliminar_ejercicio">Eliminar ejercicio</string>
+    <string name="btn_agregar">Agregar</string>
+
+    <!-- Acciones genéricas -->
+    <string name="btn_editar">Editar</string>
+    <string name="btn_eliminar">Eliminar</string>
+
+</resources>

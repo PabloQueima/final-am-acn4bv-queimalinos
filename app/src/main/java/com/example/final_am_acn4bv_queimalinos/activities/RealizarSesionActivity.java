@@ -139,7 +139,7 @@ public class RealizarSesionActivity extends AppCompatActivity {
                                     );
                                     params.setMargins(0, 4, 0, 4);
                                     separador.setLayoutParams(params);
-                                    separador.setBackgroundColor(getResources().getColor(R.color.color_dark2));
+                                    separador.setBackgroundColor(getResources().getColor(R.color.color_primary));
                                     contenedorEjercicios.addView(separador);
                                 }
                             });

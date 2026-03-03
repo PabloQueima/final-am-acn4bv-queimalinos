@@ -105,8 +105,8 @@ public class SesionesAdapter extends RecyclerView.Adapter<SesionesAdapter.ViewHo
             txtCliente = itemView.findViewById(R.id.txtCliente);
             txtEjercicios = itemView.findViewById(R.id.txtEjercicios);
             txtFecha = itemView.findViewById(R.id.txtFecha);
-            btnEditar = itemView.findViewById(R.id.btnEditar);
-            btnEliminar = itemView.findViewById(R.id.btnEliminar);
+            btnEditar = itemView.findViewById(R.id.btnEditarItem);
+            btnEliminar = itemView.findViewById(R.id.btnEliminarItem);
         }
     }
 

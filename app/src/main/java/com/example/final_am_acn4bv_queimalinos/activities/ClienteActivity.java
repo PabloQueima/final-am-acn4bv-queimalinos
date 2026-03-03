@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.final_am_acn4bv_queimalinos.R;
 import com.example.final_am_acn4bv_queimalinos.models.Sesion;
@@ -122,7 +123,10 @@ public class ClienteActivity extends AppCompatActivity {
                         }
 
                         Button btnEntrenar = new Button(this);
-                        btnEntrenar.setText("Entrenar!");
+                        btnEntrenar.setText("A Entrenar!");
+                        btnEntrenar.setBackgroundColor(
+                                ContextCompat.getColor(this, R.color.color_success)
+                        );
                         btnEntrenar.setOnClickListener(v -> {
                             Intent intent = new Intent(this, RealizarSesionActivity.class);
                             intent.putExtra("sesionId", sesion.getId());
@@ -139,7 +143,7 @@ public class ClienteActivity extends AppCompatActivity {
                         );
                         params.setMargins(0, 8, 0, 8);
                         separador.setLayoutParams(params);
-                        separador.setBackgroundColor(getResources().getColor(R.color.color_dark2));
+                        separador.setBackgroundColor(getResources().getColor(R.color.color_primary));
                         contenedorSesiones.addView(separador);
                     }
                 });
@@ -199,7 +203,7 @@ public class ClienteActivity extends AppCompatActivity {
                                 );
                                 params.setMargins(0, 4, 0, 4);
                                 separador.setLayoutParams(params);
-                                separador.setBackgroundColor(getResources().getColor(R.color.color_dark2));
+                                separador.setBackgroundColor(getResources().getColor(R.color.color_primary));
                                 contenedorSesionesCompletadas.addView(separador);
                             });
 

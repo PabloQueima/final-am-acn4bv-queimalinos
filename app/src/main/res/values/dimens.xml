@@ -1,13 +1,24 @@
 <resources>
     <dimen name="padding_general">16dp</dimen>
+    <dimen name="padding_item">12dp</dimen>
+
+    <dimen name="margen_seccion">24dp</dimen>
     <dimen name="margen_tarjeta">8dp</dimen>
     <dimen name="margen_sesion">24dp</dimen>
+    <dimen name="margen_pequeno">8dp</dimen>
 
     <dimen name="texto_titulo">28sp</dimen>
     <dimen name="texto_subtitulo">20sp</dimen>
     <dimen name="texto_general">14sp</dimen>
 
     <dimen name="imagen_ejercicio">150dp</dimen>
+    <dimen name="alto_imagen_detalle">360dp</dimen>
     <dimen name="logo_login">140dp</dimen>
     <dimen name="logo_splash">200dp</dimen>
+
+    <dimen name="alto_recycler">400dp</dimen>
+    <dimen name="alto_recycler_pequeno">170dp</dimen>
+    <dimen name="alto_recycler_mediano">280dp</dimen>
+    <dimen name="alto_recycler_grande">520dp</dimen>
+
 </resources>

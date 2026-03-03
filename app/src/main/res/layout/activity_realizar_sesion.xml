@@ -5,74 +5,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/padding_general"
-    android:background="@drawable/fondo">
+    android:background="@color/color_background">
 
     <TextView
         android:id="@+id/txtTituloSesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/texto_titulo"
-        android:textColor="@color/color_dark"
+        android:textColor="@color/color_text_on_secondary"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"
-        android:text="Sesión"/>
+        android:layout_marginBottom="@dimen/margen_pequeno"/>
 
     <TextView
         android:id="@+id/txtTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00:00:00"
+        android:text="@string/txt_timer_default"
         android:textSize="@dimen/texto_subtitulo"
-        android:textColor="@color/color_dark2"
-        android:layout_marginBottom="12dp"/>
+        android:textColor="@color/color_text_on_secondary"
+        android:layout_marginBottom="@dimen/margen_tarjeta"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ejercicios"
+        android:text="@string/txt_ejercicios"
         android:textSize="@dimen/texto_general"
         android:textStyle="bold"
-        android:textColor="@color/color_dark2"
-        android:layout_marginBottom="4dp"/>
+        android:textColor="@color/color_text_on_secondary"
+        android:layout_marginBottom="@dimen/margen_pequeno"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:textColor="@color/color_text_on_secondary"
+        android:layout_marginBottom="@dimen/margen_tarjeta">
 
         <LinearLayout
             android:id="@+id/contenedorEjercicios"
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:textColor="@color/color_text_on_secondary"
             android:layout_height="wrap_content"/>
     </ScrollView>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="12dp">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/btnCancelarSesion"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Cancelar"
+            android:text="@string/btn_cancelar"
+            android:textColor="@color/color_text_on_primary"
             android:backgroundTint="@color/color_accent"
-            android:textColor="@color/color_light"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="@dimen/margen_pequeno"/>
 
         <Button
             android:id="@+id/btnFinalizarSesion"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Finalizar"
+            android:text="@string/btn_finalizar"
+            android:textColor="@color/color_text_on_primary"
             android:backgroundTint="@color/color_primary"
-            android:textColor="@color/color_light"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="@dimen/margen_pequeno"/>
     </LinearLayout>
-
 </LinearLayout>
